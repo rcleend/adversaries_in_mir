@@ -2,7 +2,7 @@
 This is the code for the accepted [TISMIR](https://transactions.ismir.net/) submission
 *On End-to-End White-Box Adversarial Attacks in Music Information Retrieval* (Institute for Computational 
 Perception, JKU Linz). To view our supplementary material, including listening examples, 
-look at our Github page (link follows). 
+look at our [Github page](https://cpjku.github.io/adversaries_in_mir/). 
 
 Note that this work is an extension of our previous technical report [End-to-End Adversarial White Box Attacks on 
 Music Instrument Classification](https://arxiv.org/abs/2007.14714), and therefore includes the 

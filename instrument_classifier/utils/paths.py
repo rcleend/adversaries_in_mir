@@ -1,9 +1,9 @@
 from pathlib import Path
 
 # path pointing to data
-d_path = 'insert/your/path/here'
+d_path = 'instrument_classifier/data/data_files'
 # path pointing to .csv files (containing label information)
-csv_path = 'insert/your/path/here'
+csv_path = 'instrument_classifier/data/data_files/meta'
 
 misc_path = str(Path(__file__).parent.parent.parent / 'misc')
 adversary_path = str(Path(misc_path) / 'adversaries')

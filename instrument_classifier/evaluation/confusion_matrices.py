@@ -65,7 +65,7 @@ def _log_confusion_matrix(log_file_path):
         log = [line.rstrip() for line in fp]
 
     indices = np.array(log[0].split(','))
-    log = np.array([line.split(',') for line in log[1:12]])
+    log = np.array([line.split(',') for line in log[1:]])
     true_idx = np.argmax(indices == 'true')
     new_idx = np.argmax(indices == 'new')
 
@@ -80,4 +80,4 @@ def _log_confusion_matrix(log_file_path):
 
 
 if __name__ == '__main__':
-    plot_confusion_matrix('test.png', os.path.join(misc_path, 'pretrained_models/logs/torch16s1f/log.csv'))
+    plot_confusion_matrix('test.png', os.path.join(misc_path, 'logs/test_torch16s1f.csv'))

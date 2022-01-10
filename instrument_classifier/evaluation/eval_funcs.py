@@ -67,7 +67,7 @@ def compute_adversarial_accuracy(log_file_path):
         log = [line.rstrip() for line in fp]
 
     indices = np.array(log[0].split(','))
-    log = np.array([line.split(',') for line in log[1:12]])
+    log = np.array([line.split(',') for line in log[1:]])
     true_idx = np.argmax(indices == 'true')
     new_idx = np.argmax(indices == 'new')
 
@@ -77,7 +77,7 @@ def compute_adversarial_accuracy(log_file_path):
 
 
 if __name__ == '__main__':
-    log_path = os.path.join(misc_path, 'pretrained_models/logs/torch16s1f/log.csv')
+    log_path = os.path.join(misc_path, 'logs/test_torch16s1f.csv')
     print(compute_clean_accuracy(log_path))
     print(compute_avg_std_iterations(log_path))
     print(compute_quart_iterations(log_path))

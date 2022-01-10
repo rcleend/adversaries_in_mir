@@ -77,7 +77,7 @@ def compute_adversarial_accuracy(log_file_path):
 
 
 if __name__ == '__main__':
-    log_path = os.path.join(misc_path, 'pretrained_models/logs/test_torch16s1f.csv')
+    log_path = os.path.join(misc_path, 'pretrained_models/logs/torch16s1f/log.csv')
     print(compute_clean_accuracy(log_path))
     print(compute_avg_std_iterations(log_path))
     print(compute_quart_iterations(log_path))

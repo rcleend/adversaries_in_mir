@@ -67,7 +67,7 @@ def compute_adversarial_accuracy(log_file_path):
         log = [line.rstrip() for line in fp]
 
     indices = np.array(log[0].split(','))
-    log = np.array([line.split(',') for line in log[1:13]])
+    log = np.array([line.split(',') for line in log[1:12]])
     true_idx = np.argmax(indices == 'true')
     new_idx = np.argmax(indices == 'new')
 

@@ -65,7 +65,7 @@ def _log_confusion_matrix(log_file_path):
         log = [line.rstrip() for line in fp]
 
     indices = np.array(log[0].split(','))
-    log = np.array([line.split(',') for line in log[1:]])
+    log = np.array([line.split(',') for line in log[1:13]])
     true_idx = np.argmax(indices == 'true')
     new_idx = np.argmax(indices == 'new')
 

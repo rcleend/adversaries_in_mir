@@ -60,6 +60,8 @@ def run_fgsm(net, data, get_feature, logger, ad_save_path, epsilon):
 
 def main():
     # get params
+
+    # hoi2
     cur_dir = os.path.abspath(os.path.dirname(__file__))
     param_file = os.path.join(cur_dir, 'fgsm_config.txt')
     params = get_params(param_file)

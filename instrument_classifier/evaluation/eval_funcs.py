@@ -78,8 +78,8 @@ def compute_adversarial_accuracy(log_file_path):
 
 if __name__ == '__main__':
     log_path = os.path.join(misc_path, 'logs/fgsm_test_torch16s1f.csv')
-    print(compute_clean_accuracy(log_path))
-    print(compute_avg_std_iterations(log_path))
-    print(compute_quart_iterations(log_path))
-    print(compute_avg_std_snr(log_path))
-    print(compute_adversarial_accuracy(log_path))
+    print("Clean accuracy: ",compute_clean_accuracy(log_path))
+    print("Std_iterations: ",compute_avg_std_iterations(log_path))
+    print("Quart_iterations: ",compute_quart_iterations(log_path))
+    print("Average SNR: ",compute_avg_std_snr(log_path))
+    print("Adversarial accuracy",compute_adversarial_accuracy(log_path))

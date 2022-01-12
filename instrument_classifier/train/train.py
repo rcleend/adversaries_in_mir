@@ -8,6 +8,11 @@ from instrument_classifier.utils.avgpool_cnn import AveragePoolCNN
 from instrument_classifier.data.datasets import RawDataset, AudioDataset
 from instrument_classifier.evaluation.evaluation_utils import get_data
 
+
+# Parameters
+use_cuda = True
+n_epoch = 200
+
 # Train Network
 
 # Init Model, Loss Function, Optimizer, and Scheduler
@@ -18,7 +23,62 @@ criterion = nn.CrossEntropyLoss()
 # TODO: update parameters and learning rate
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
-# TODO: Init Dataset and DataLoader
+# TODO: updata gamma
+scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
+
+# Init DataLoader
 data_loader = get_data(model_name='hoi', adversary=None, valid_set=False)
 
-print(data_loader)
+if use_cuda and torch.cuda.is_available():
+  device = torch.device('cuda')
+else:
+  device = torch.device('cpu')
+
+print('Device: {}'.format(device))
+print(device)
+
+
+# Start Training
+start=time.time()
+
+for epoch in range(0,n_epoch):
+
+  net.train()  # Put the network in train mode
+  for i, (x_batch, y_batch) in enumerate(data_loader):
+    x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
+    
+    optimizer.zero_grad()  # Set all currenly stored gradients to zero 
+
+    y_pred = net(x_batch)
+
+    loss = criterion(y_pred, y_batch)
+
+    loss.backward()
+
+    optimizer.step()
+
+    # Compute relevant metrics
+    
+    y_pred_max = torch.argmax(y_pred, dim=1)  # Get the labels with highest output probability
+
+    correct = torch.sum(torch.eq(y_pred_max, y_batch)).item()  # Count how many are equal to the true labels
+
+    elapsed = time.time() - start  # Keep track of how much time has elapsed
+
+    # Show progress every 20 batches 
+    if not i % 20:
+      print(f'epoch: {epoch}, time: {elapsed:.3f}s, loss: {loss.item():.3f}, train accuracy: {correct / batch_size:.3f}')
+    
+    correct_total = 0
+
+#   net.eval()  # Put the network in eval mode
+#   for i, (x_batch, y_batch) in enumerate(testloader):
+#     x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
+
+#     y_pred = net(x_batch)
+#     y_pred_max = torch.argmax(y_pred, dim=1)
+
+#     correct_total += torch.sum(torch.eq(y_pred_max, y_batch)).item()
+
+#   print(f'Accuracy on the test set: {correct_total / len(testset):.3f}')
+

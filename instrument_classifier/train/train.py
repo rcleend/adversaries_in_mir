@@ -25,6 +25,7 @@ def get_data_loader():
 # Parameters
 use_cuda = True
 n_epoch = 200
+batch_size = 128
 
 if use_cuda and torch.cuda.is_available():
   device = torch.device('cuda')

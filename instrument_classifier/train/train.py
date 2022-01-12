@@ -8,19 +8,17 @@ import attrdict as attr
 
 from instrument_classifier.utils.avgpool_cnn import AveragePoolCNN
 from instrument_classifier.data.datasets import RawDataset, AudioDataset
-from instrument_classifier.evaluation.evaluation_utils import get_data
 from instrument_classifier.utils.attack_utils import get_files
 from instrument_classifier.utils.paths import d_path, adversary_path, log_path
 
-# def get_data_loader():
-#     files = get_files()
-#     params = attr.AttrDict({'feature': 'torch', 'feature_length': None,
-#                             'pre_computed': False, 'sample_wise_norm': False})
+def get_data_loader():
+    files = get_files()
+    params = attr.AttrDict({'feature': 'torch', 'feature_length': None,
+                            'pre_computed': False, 'sample_wise_norm': False})
 
 
-#     ads = AudioDataset(files, data_path=d_path, feature_dict=params,
-#                        norm_file_path=os.path.join(log_path, model_name, '{}.csv'), d_path_backup=backup_path)
-#     return DataLoader(ads, batch_size=1, shuffle=False)
+    ads = AudioDataset(files, data_path=d_path, feature_dict=params)
+    return DataLoader(ads, batch_size=1, shuffle=False)
 
 
 
@@ -42,7 +40,7 @@ optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
 
 # Init DataLoader
-data_loader = get_data(model_name='hoi', adversary=None, valid_set=True)
+data_loader = get_data_loader()
 
 if use_cuda and torch.cuda.is_available():
   device = torch.device('cuda')

@@ -39,6 +39,7 @@ print(device)
 
 
 # Start Training
+print('Start training Network')
 start=time.time()
 
 for epoch in range(0,n_epoch):

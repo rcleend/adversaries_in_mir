@@ -19,6 +19,6 @@ criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
 # TODO: Init Dataset and DataLoader
-data_loader = get_data(model_name='hoi')
+data_loader = get_data(model_name='hoi', adversary=False, valid_set=False)
 
 print(data_loader)

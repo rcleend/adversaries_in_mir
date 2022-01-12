@@ -26,10 +26,19 @@ def get_data_loader():
 use_cuda = True
 n_epoch = 200
 
+if use_cuda and torch.cuda.is_available():
+  device = torch.device('cuda')
+else:
+  device = torch.device('cpu')
+
+print('Device: {}'.format(device))
+print(device)
+
+
 # Train Network
 
 # Init Model, Loss Function, Optimizer, and Scheduler
-net = AveragePoolCNN(1,12)
+net = AveragePoolCNN(1,12).to(device)
 
 criterion = nn.CrossEntropyLoss()
 
@@ -42,13 +51,6 @@ scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
 # Init DataLoader
 data_loader = get_data_loader()
 
-if use_cuda and torch.cuda.is_available():
-  device = torch.device('cuda')
-else:
-  device = torch.device('cpu')
-
-print('Device: {}'.format(device))
-print(device)
 
 
 # Start Training

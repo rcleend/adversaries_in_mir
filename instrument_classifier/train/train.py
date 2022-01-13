@@ -29,7 +29,6 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
         net.train()  # Put the network in train mode
         for i, (x_batch, y_batch) in enumerate(data_loader):
             x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
-            print('length: ', len(x_batch))
 
             optimizer.zero_grad()  # Set all currenly stored gradients to zero 
 
@@ -45,9 +44,6 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
             # Compute relevant metrics
     
             y_pred_max = torch.argmax(y_pred, dim=1)  # Get the labels with highest output probability
-
-            print('y batch: ',y_batch)
-            print('y pred_max: ',y_pred_max)
 
             correct = torch.sum(torch.eq(y_pred_max, y_batch)).item()  # Count how many are equal to the true labels
 

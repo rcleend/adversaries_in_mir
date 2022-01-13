@@ -29,6 +29,7 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
         net.train()  # Put the network in train mode
         for i, (x_batch, y_batch) in enumerate(data_loader):
             x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
+            print('length: ', len(x_batch))
 
             optimizer.zero_grad()  # Set all currenly stored gradients to zero 
 

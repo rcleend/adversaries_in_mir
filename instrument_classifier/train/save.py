@@ -1,6 +1,5 @@
 import torch
 from instrument_classifier.utils.paths import model_path
-import instrument_classifier.train.train as train
 
 
 def save_model(nn, model_name):

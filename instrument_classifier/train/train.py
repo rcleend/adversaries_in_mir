@@ -103,4 +103,4 @@ train(
     n_epoch=n_epoch
     )
 
-save_model(net, 'save_test.tar')
+save_model(net, 'save_test')

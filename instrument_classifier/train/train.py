@@ -99,5 +99,4 @@ train(
     device=device,
     n_epoch=n_epoch
     )
-
 torch.save_model(net, "save_test")

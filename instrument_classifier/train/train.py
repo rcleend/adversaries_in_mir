@@ -69,7 +69,7 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
 
 
 # Parameters ---------------------------------------------------------------
-n_epoch = 200
+n_epoch = 2
 batch_size = 1 #TODO: update batch_size in DataLoader
 
 if torch.cuda.is_available():
@@ -99,3 +99,5 @@ train(
     device=device,
     n_epoch=n_epoch
     )
+
+torch.save_model(net, "save_test")

@@ -34,7 +34,6 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
 
             y_pred = net(x_batch)
 
-
             loss = criterion(y_pred, y_batch)
 
             loss.backward()
@@ -46,8 +45,6 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
             y_pred_max = torch.argmax(y_pred, dim=1)  # Get the labels with highest output probability
 
             correct = torch.sum(torch.eq(y_pred_max, y_batch)).item()  # Count how many are equal to the true labels
-
-            print('correct',correct)
 
             elapsed = time.time() - start  # Keep track of how much time has elapsed
 
@@ -73,7 +70,7 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
 
 # Parameters ---------------------------------------------------------------
 n_epoch = 200
-batch_size = 20
+batch_size = 1 #TODO: update batch_size in DataLoader
 
 if torch.cuda.is_available():
   device = torch.device('cuda')

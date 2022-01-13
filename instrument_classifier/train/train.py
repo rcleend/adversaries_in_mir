@@ -45,8 +45,8 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
     
             y_pred_max = torch.argmax(y_pred, dim=1)  # Get the labels with highest output probability
 
-            print(y_pred)
-            print(y_pred_max)
+            print('y batch: ',y_batch)
+            print('y pred_max: ',y_pred_max)
 
             correct = torch.sum(torch.eq(y_pred_max, y_batch)).item()  # Count how many are equal to the true labels
 

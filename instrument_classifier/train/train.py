@@ -12,6 +12,7 @@ from instrument_classifier.utils.attack_utils import get_files
 from instrument_classifier.utils.paths import d_path
 from instrument_classifier.train.save import save_model
 
+
 def get_data_loader():
     files = get_files()
     params = attr.AttrDict({'feature': 'torch', 'feature_length': None,
@@ -20,6 +21,7 @@ def get_data_loader():
 
     ads = AudioDataset(files, data_path=d_path, feature_dict=params)
     return DataLoader(ads, batch_size=1, shuffle=False)
+
 
 def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size): 
     print('Start training Network')

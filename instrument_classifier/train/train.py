@@ -10,6 +10,7 @@ from instrument_classifier.utils.avgpool_cnn import AveragePoolCNN
 from instrument_classifier.data.datasets import RawDataset, AudioDataset
 from instrument_classifier.utils.attack_utils import get_files
 from instrument_classifier.utils.paths import d_path
+from instrument_classifier.train.save import save_model
 
 def get_data_loader():
     files = get_files()
@@ -100,4 +101,4 @@ train(
     n_epoch=n_epoch
     )
 
-torch.save(net, 'save_test.tar')
+save_model(net, 'save_test')

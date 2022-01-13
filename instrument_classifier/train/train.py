@@ -100,4 +100,4 @@ train(
     n_epoch=n_epoch
     )
 
-torch.save(net, "save_test")
+torch.save(net, 'save_test.tar')

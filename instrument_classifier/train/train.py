@@ -10,11 +10,11 @@ import os
 from instrument_classifier.utils.avgpool_cnn import AveragePoolCNN
 from instrument_classifier.data.datasets import RawDataset, AudioDataset
 from instrument_classifier.utils.attack_utils import get_files
-from instrument_classifier.utils.paths import d_path, log_path
+from instrument_classifier.utils.paths import d_path, model_path
 from instrument_classifier.train.save import save_model
 
 
-def get_data_loader(valid=True, batch_size=1, pretrained_model_path=None):
+def get_data_loader(valid=True, batch_size=1):
     files = get_files(valid)
     params = attr.AttrDict({'feature': 'torch', 'feature_length': None,
                             'pre_computed': False, 'sample_wise_norm': False})
@@ -24,7 +24,6 @@ def get_data_loader(valid=True, batch_size=1, pretrained_model_path=None):
                       files, 
                       data_path=d_path, 
                       feature_dict=params, 
-                      norm_file_path=pretrained_model_path, 
                       valid=valid
                       )
 
@@ -84,7 +83,8 @@ def eval(net, data_loader, device):
 # Parameters ---------------------------------------------------------------
 n_epoch = 2
 batch_size = 1
-pretrained_model_name = 'test'
+mode='eval'
+model_name='save_test'
 
 if torch.cuda.is_available():
   device = torch.device('cuda')
@@ -101,13 +101,7 @@ criterion = nn.CrossEntropyLoss()
 
 train_loader = get_data_loader(batch_size=batch_size)
 
-pretrained_model_path=os.path.join(log_path, pretrained_model_name, '{}.csv')
-
-test_loader = get_data_loader(
-                              valid=False, 
-                              batch_size=batch_size, 
-                              pretrained_model_path=pretrained_model_path
-                              )
+test_loader = get_data_loader(valid=False, batch_size=batch_size)
 
 # TODO: update parameters and learning rate
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
@@ -115,18 +109,20 @@ optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 # TODO: updata gamma and add to training function
 scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
 
-train(
-    net=net,
-    criterion=criterion,
-    data_loader=train_loader,
-    optimizer=optimizer,
-    batch_size=batch_size,
-    device=device,
-    n_epoch=n_epoch
-    )
+if mode == 'train':
+  train(
+      net=net,
+      criterion=criterion,
+      data_loader=train_loader,
+      optimizer=optimizer,
+      batch_size=batch_size,
+      device=device,
+      n_epoch=n_epoch
+      )
 
+  save_model(net, model_name)
 
-save_model(net, 'save_test')
+net.load_state_dict(torch.load(os.path.join(model_path, 'self-trained/', model_name + '.tar')))
 
 # Evaluate Network ---------------------------------------------------------
 

@@ -77,7 +77,9 @@ class AudioDataset(Dataset):
         if self.valid and os.path.exists(os.path.join(path, 'train_curated')):
             path = os.path.join(path, 'train_curated')
         elif os.path.exists(os.path.join(path, 'test')):
-            data = self.get_features(file=clip, sample_path=path)
+            path = os.path.join(path, 'test')
+
+        data = self.get_features(file=clip, sample_path=path)
 
         # normalisation
         data = self._normalise(data)

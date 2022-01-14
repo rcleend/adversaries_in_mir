@@ -45,7 +45,7 @@ class RawDataset(Dataset):
 
 class AudioDataset(Dataset):
     """ Dataset for single-label musical audio-files, returns (pre-computed) Mel-spectrograms. """
-    def __init__(self, filename, data_path, feature_dict, norm_file_path=None, d_path_backup=None):
+    def __init__(self, filename, data_path, feature_dict, norm_file_path=None, d_path_backup=None, valid=True):
         self.filenames = filename if isinstance(filename, list) else read_file(csv_path, filename)
         self.data_path, self.back_up_data_path = data_path, d_path_backup
         self.feature_dict = feature_dict
@@ -59,8 +59,8 @@ class AudioDataset(Dataset):
         else:
             self.get_features = get_torch_spec
 
-        if not set(self.filenames).issubset(set(self.labels.keys())):
-            print('UPDATING WITH TEST LABELS')
+        if not valid:
+            print('Set Test Labels')
             self.labels = get_test_label_dict()
         else:
             self.labels = get_train_label_dict()

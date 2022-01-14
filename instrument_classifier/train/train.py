@@ -19,7 +19,7 @@ def get_data_loader(valid=True, batch_size=1):
                             'pre_computed': False, 'sample_wise_norm': False})
 
 
-    ads = AudioDataset(files, data_path=d_path, feature_dict=params)
+    ads = AudioDataset(files, data_path=d_path, feature_dict=params, valid=valid)
     return DataLoader(ads, batch_size, shuffle=False)
 
 

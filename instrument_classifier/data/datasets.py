@@ -74,10 +74,14 @@ class AudioDataset(Dataset):
         return len(self.filenames)
 
     def _read_data(self, path, clip):
+        # Navigate to correct path based on test or validation mode
         if self.valid and os.path.exists(os.path.join(path, 'train_curated')):
-            path = os.path.join(path, 'train_curated')
+            directory = 'train_curated'
         elif os.path.exists(os.path.join(path, 'test')):
-            path = os.path.join(path, 'test')
+            directory = 'test'
+            
+        assert directory
+        path = os.path.join(path, directory)
 
         data = self.get_features(file=clip, sample_path=path)
 

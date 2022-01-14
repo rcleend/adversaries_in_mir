@@ -19,7 +19,7 @@ def get_data_loader(valid=True, batch_size=1):
                             'pre_computed': False, 'sample_wise_norm': False})
 
 
-    ads = AudioDataset(files, data_path=d_path, feature_dict=params, valid=valid)
+    ads = AudioDataset(files, filename='hoi', data_path=d_path, feature_dict=params, valid=valid)
     return DataLoader(ads, batch_size, shuffle=False)
 
 
@@ -67,7 +67,6 @@ def eval(net, data_loader, device):
     y_pred_max = torch.argmax(y_pred, dim=1)
 
     correct_total += torch.sum(torch.eq(y_pred_max, y_batch)).item()
-    print('correct total: ', correct_total)
 
   print(f'Accuracy on the test set: {correct_total / len(data_loader.dataset):.3f}')
 

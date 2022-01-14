@@ -13,14 +13,14 @@ from instrument_classifier.utils.paths import d_path
 from instrument_classifier.train.save import save_model
 
 
-def get_data_loader(valid=True):
+def get_data_loader(valid=True, batch_size=1):
     files = get_files(valid)
     params = attr.AttrDict({'feature': 'torch', 'feature_length': None,
                             'pre_computed': False, 'sample_wise_norm': False})
 
 
     ads = AudioDataset(files, data_path=d_path, feature_dict=params)
-    return DataLoader(ads, batch_size=1, shuffle=False)
+    return DataLoader(ads, batch_size, shuffle=False)
 
 
 def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size): 
@@ -75,7 +75,7 @@ def eval(net, data_loader, device):
 
 # Parameters ---------------------------------------------------------------
 n_epoch = 2
-batch_size = 1 #TODO: update batch_size in DataLoader
+batch_size = 1
 
 if torch.cuda.is_available():
   device = torch.device('cuda')
@@ -90,8 +90,8 @@ print('device: ', device)
 net = AveragePoolCNN(1,12).to(device)
 criterion = nn.CrossEntropyLoss()
 
-train_loader = get_data_loader()
-test_loader = get_data_loader(valid=False)
+train_loader = get_data_loader(batch_size=batch_size)
+test_loader = get_data_loader(valid=False, batch_size=batch_size)
 
 # TODO: update parameters and learning rate
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
@@ -111,6 +111,8 @@ train(
 
 
 save_model(net, 'save_test')
+
+# Evaluate Network ---------------------------------------------------------
 
 eval(
     net=net,

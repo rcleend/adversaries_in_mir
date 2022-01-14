@@ -61,7 +61,9 @@ class AudioDataset(Dataset):
 
         self.labels = get_train_label_dict()
         if not set(self.filenames).issubset(set(self.labels.keys())):
+            print('UPDATING WITH TEST LABELS')
             self.labels.update(get_test_label_dict())
+
         self.label_map = {l: i for i, l in enumerate(sorted(get_unique_label_set()))}
         self.filenames = sorted(list(set(self.filenames).intersection(set(self.labels.keys()))))
 

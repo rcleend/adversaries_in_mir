@@ -67,6 +67,7 @@ def eval(net, data_loader, device):
     y_pred_max = torch.argmax(y_pred, dim=1)
 
     correct_total += torch.sum(torch.eq(y_pred_max, y_batch)).item()
+    print('correct total: ', correct_total)
 
   print(f'Accuracy on the test set: {correct_total / len(data_loader.dataset):.3f}')
 

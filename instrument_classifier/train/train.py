@@ -83,7 +83,7 @@ def eval(net, data_loader, device):
 # Parameters ---------------------------------------------------------------
 n_epoch = 2
 batch_size = 1
-mode='eval'
+is_training = False
 model_name='save_test'
 
 if torch.cuda.is_available():
@@ -109,7 +109,7 @@ optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 # TODO: updata gamma and add to training function
 scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
 
-if mode == 'train':
+if is_training:
   train(
       net=net,
       criterion=criterion,

@@ -2,24 +2,32 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import time
 from torch.utils.data import DataLoader
 import attrdict as attr
+import time
+import os
 
 from instrument_classifier.utils.avgpool_cnn import AveragePoolCNN
 from instrument_classifier.data.datasets import RawDataset, AudioDataset
 from instrument_classifier.utils.attack_utils import get_files
-from instrument_classifier.utils.paths import d_path
+from instrument_classifier.utils.paths import d_path, log_path
 from instrument_classifier.train.save import save_model
 
 
-def get_data_loader(valid=True, batch_size=1):
+def get_data_loader(valid=True, batch_size=1, pretrained_model_path=None):
     files = get_files(valid)
     params = attr.AttrDict({'feature': 'torch', 'feature_length': None,
                             'pre_computed': False, 'sample_wise_norm': False})
 
 
-    ads = AudioDataset(files, filename='hoi', data_path=d_path, feature_dict=params, valid=valid)
+    ads = AudioDataset(
+                      files, 
+                      data_path=d_path, 
+                      feature_dict=params, 
+                      norm_file_path=pretrained_model_path, 
+                      valid=valid
+                      )
+
     return DataLoader(ads, batch_size, shuffle=False)
 
 
@@ -76,6 +84,7 @@ def eval(net, data_loader, device):
 # Parameters ---------------------------------------------------------------
 n_epoch = 2
 batch_size = 1
+pretrained_model_name = 'test'
 
 if torch.cuda.is_available():
   device = torch.device('cuda')
@@ -91,7 +100,14 @@ net = AveragePoolCNN(1,12).to(device)
 criterion = nn.CrossEntropyLoss()
 
 train_loader = get_data_loader(batch_size=batch_size)
-test_loader = get_data_loader(valid=False, batch_size=batch_size)
+
+pretrained_model_path=os.path.join(log_path, pretrained_model_name, '{}.csv')
+
+test_loader = get_data_loader(
+                              valid=False, 
+                              batch_size=batch_size, 
+                              pretrained_model_path=pretrained_model_path
+                              )
 
 # TODO: update parameters and learning rate
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
@@ -117,6 +133,6 @@ save_model(net, 'save_test')
 eval(
     net=net,
     data_loader=test_loader,
-    device=device
+    device=device,
     )
 

@@ -64,6 +64,7 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
 
 def eval(net, data_loader, device):
   print('Evaluating network on test data')
+  print('testset size: ', len(data_loader.dataset))
   correct_total = 0
 
   net.eval()  # Put the network in eval mode
@@ -83,7 +84,7 @@ def eval(net, data_loader, device):
 # Parameters ---------------------------------------------------------------
 n_epoch = 200
 batch_size = 1
-is_training = True
+is_training = False
 model_name='save_test'
 
 

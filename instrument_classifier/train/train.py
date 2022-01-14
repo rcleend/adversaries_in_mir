@@ -55,7 +55,7 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
             if not i % 20:
                 print(f'epoch: {epoch}, time: {elapsed:.3f}s, loss: {loss.item():.3f}, train accuracy: {correct / batch_size:.3f}')
 
-def eval(net, data_loader):
+def eval(net, data_loader, device):
   print('Evaluating network on test data')
   correct_total = 0
 
@@ -81,6 +81,8 @@ if torch.cuda.is_available():
   device = torch.device('cuda')
 else:
   device = torch.device('cpu')
+
+print('device: ', device)
 
 # Train Network ------------------------------------------------------------
 
@@ -112,6 +114,7 @@ save_model(net, 'save_test')
 
 eval(
     net=net,
-    data_loader=test_loader
+    data_loader=test_loader,
+    device=device
     )
 

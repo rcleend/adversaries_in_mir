@@ -50,6 +50,7 @@ class AudioDataset(Dataset):
         self.data_path, self.back_up_data_path = data_path, d_path_backup
         self.feature_dict = feature_dict
         self.norm_file_path = norm_file_path
+        self.valid = valid
 
         if feature_dict.feature != 'torch':
             raise NotImplementedError('Please define valid feature! (`torch`)')
@@ -59,7 +60,7 @@ class AudioDataset(Dataset):
         else:
             self.get_features = get_torch_spec
 
-        if not valid:
+        if not self.valid:
             print('Set Test Labels')
             self.labels = get_test_label_dict()
         else:
@@ -73,9 +74,11 @@ class AudioDataset(Dataset):
         return len(self.filenames)
 
     def _read_data(self, path, clip):
-        if os.path.exists(os.path.join(path, 'train_curated')):
+        if self.valid and os.path.exists(os.path.join(path, 'train_curated')):
             path = os.path.join(path, 'train_curated')
-        data = self.get_features(file=clip, sample_path=path)
+        elif os.path.exists(os.path.join(path, 'test')):
+            data = self.get_features(file=clip, sample_path=path)
+
         # normalisation
         data = self._normalise(data)
 

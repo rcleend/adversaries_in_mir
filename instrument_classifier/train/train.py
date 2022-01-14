@@ -13,8 +13,8 @@ from instrument_classifier.utils.paths import d_path
 from instrument_classifier.train.save import save_model
 
 
-def get_data_loader():
-    files = get_files()
+def get_data_loader(valid=True):
+    files = get_files(valid)
     params = attr.AttrDict({'feature': 'torch', 'feature_length': None,
                             'pre_computed': False, 'sample_wise_norm': False})
 
@@ -54,19 +54,21 @@ def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size):
             # Show progress every 20 batches 
             if not i % 20:
                 print(f'epoch: {epoch}, time: {elapsed:.3f}s, loss: {loss.item():.3f}, train accuracy: {correct / batch_size:.3f}')
-    
-    #   correct_total = 0
 
-    #   net.eval()  # Put the network in eval mode
-    #   for i, (x_batch, y_batch) in enumerate(testloader):
-    #     x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
+def eval(net, data_loader):
+  print('Evaluating network on test data')
+  correct_total = 0
 
-    #     y_pred = net(x_batch)
-    #     y_pred_max = torch.argmax(y_pred, dim=1)
+  net.eval()  # Put the network in eval mode
+  for i, (x_batch, y_batch) in enumerate(data_loader):
+    x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
 
-    #     correct_total += torch.sum(torch.eq(y_pred_max, y_batch)).item()
+    y_pred = net(x_batch)
+    y_pred_max = torch.argmax(y_pred, dim=1)
 
-    #   print(f'Accuracy on the test set: {correct_total / len(testset):.3f}')
+    correct_total += torch.sum(torch.eq(y_pred_max, y_batch)).item()
+
+  print(f'Accuracy on the test set: {correct_total / len(data_loader.dataset):.3f}')
 
 
 
@@ -85,7 +87,9 @@ else:
 # Init training parameters
 net = AveragePoolCNN(1,12).to(device)
 criterion = nn.CrossEntropyLoss()
-data_loader = get_data_loader()
+
+train_loader = get_data_loader()
+test_loader = get_data_loader(valid=False)
 
 # TODO: update parameters and learning rate
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
@@ -96,11 +100,18 @@ scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
 train(
     net=net,
     criterion=criterion,
-    data_loader=data_loader,
+    data_loader=train_loader,
     optimizer=optimizer,
     batch_size=batch_size,
     device=device,
     n_epoch=n_epoch
     )
 
+
 save_model(net, 'save_test')
+
+eval(
+    net=net,
+    data_loader=test_loader
+    )
+

@@ -83,15 +83,9 @@ def eval(net, data_loader, device):
 # Parameters ---------------------------------------------------------------
 n_epoch = 200
 batch_size = 1
-is_training = False
+is_training = True
 model_name='save_test'
 
-if torch.cuda.is_available():
-  device = torch.device('cuda')
-else:
-  device = torch.device('cpu')
-
-print('device: ', device)
 
 # Train Network ------------------------------------------------------------
 
@@ -102,6 +96,13 @@ criterion = nn.CrossEntropyLoss()
 train_loader = get_data_loader(batch_size=batch_size)
 
 test_loader = get_data_loader(valid=False, batch_size=batch_size)
+
+if torch.cuda.is_available():
+  device = torch.device('cuda')
+else:
+  device = torch.device('cpu')
+
+print('device: ', device)
 
 # TODO: update parameters and learning rate
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001)

@@ -30,13 +30,18 @@ def get_data_loader(valid=True, batch_size=1):
     return DataLoader(ads, batch_size, shuffle=False)
 
 
-def train(net, optimizer, criterion, data_loader, n_epoch, device, batch_size): 
+def train(net, optimizer, scheduler, criterion, data_loader, n_epoch, device, batch_size): 
     print('Start training Network')
     start=time.time()
 
+
+    net.train()  # Put the network in train mode
     for epoch in range(0,n_epoch):
 
-        net.train()  # Put the network in train mode
+        if epoch >= 90:
+          scheduler.step()
+          print(('lr = {}'.format(scheduler.get_lr())))
+
         for i, (x_batch, y_batch) in enumerate(data_loader):
             x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
 
@@ -85,7 +90,7 @@ def eval(net, data_loader, device):
 
 # Parameters ---------------------------------------------------------------
 n_epoch = 200
-batch_size = 100
+batch_size = 16
 is_training = True
 model_name='save_test'
 
@@ -112,7 +117,7 @@ test_loader = get_data_loader(valid=False, batch_size=batch_size)
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
 # TODO: updata gamma and add to training function
-scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.99)
+scheduler = optim.lr_scheduler.MultiplicativeLR(optimizer, lr_lambda=0.1)
 
 if is_training:
   train(
@@ -122,6 +127,7 @@ if is_training:
       optimizer=optimizer,
       batch_size=batch_size,
       device=device,
+      scheduler=scheduler,
       n_epoch=n_epoch
       )
 

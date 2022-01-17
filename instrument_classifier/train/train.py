@@ -27,7 +27,7 @@ def get_data_loader(valid=True, batch_size=16):
                       valid=valid
                       )
 
-    return DataLoader(ads, batch_size, shuffle=False)
+    return DataLoader(ads, batch_size, shuffle=True, drop_last=True)
 
 
 def train(net, optimizer, scheduler, criterion, data_loader, n_epoch, device, batch_size): 

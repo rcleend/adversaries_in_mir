@@ -1,4 +1,4 @@
 experiment = fgsm_test
-model_to_attack = torch16s1f
+model_to_attack = save_test
 epsilon = 0.1
 valid = True

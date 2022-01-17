@@ -92,7 +92,7 @@ def eval(net, data_loader, device):
 
 # Parameters ---------------------------------------------------------------
 n_epoch = 200
-batch_size = 1
+batch_size = 16
 is_training = True
 model_name='save_test'
 

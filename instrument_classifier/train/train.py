@@ -32,6 +32,7 @@ def get_data_loader(valid=True, batch_size=16):
 
 def train(net, optimizer, scheduler, criterion, data_loader, n_epoch, device, batch_size): 
     print('Start training Network')
+    print('train set size: ', len(data_loader.dataset))
     start=time.time()
 
 

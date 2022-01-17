@@ -44,8 +44,9 @@ def train(net, optimizer, scheduler, criterion, data_loader, n_epoch, device, ba
           print(('lr = {}'.format(scheduler.get_lr())))
 
         net.train()  # Put the network in train mode
+        print('tot hier 1')
         for i, (x_batch, y_batch) in enumerate(data_loader):
-            print(len(x_batch))
+            print('length batch: ', len(x_batch))
             if len(x_batch)!=batch_size:
                 continue
             x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used

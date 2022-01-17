@@ -44,6 +44,7 @@ def train(net, optimizer, scheduler, criterion, data_loader, n_epoch, device, ba
           print(('lr = {}'.format(scheduler.get_lr())))
 
         net.train(True)  # Put the network in train mode
+        print("epoch ", epoch, " started")
         for i, (x_batch, y_batch) in enumerate(data_loader):
             print(len(x_batch))
             if len(x_batch)!=batch_size:

@@ -37,13 +37,13 @@ def train(net, optimizer, scheduler, criterion, data_loader, n_epoch, device, ba
     start=time.time()
 
 
-    net.train()  # Put the network in train mode
     for epoch in range(0,n_epoch):
 
         if epoch >= 90:
           scheduler.step()
           print(('lr = {}'.format(scheduler.get_lr())))
 
+        net.train()  # Put the network in train mode
         for i, (x_batch, y_batch) in enumerate(data_loader):
             x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
 
@@ -92,7 +92,7 @@ def eval(net, data_loader, device):
 
 # Parameters ---------------------------------------------------------------
 n_epoch = 200
-batch_size = 1
+batch_size = 16
 is_training = True
 model_name='save_test'
 

@@ -109,9 +109,9 @@ print('device: ', device)
 net = AveragePoolCNN(1,12).to(device)
 criterion = nn.CrossEntropyLoss()
 
-train_loader = get_data_loader(batch_size=batch_size)
+train_loader = get_data_loader(valid=False, batch_size=batch_size)
 
-test_loader = get_data_loader(valid=False, batch_size=batch_size)
+test_loader = get_data_loader(valid=True, batch_size=batch_size)
 
 
 # TODO: update parameters and learning rate

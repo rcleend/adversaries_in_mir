@@ -96,7 +96,7 @@ def eval(net, data_loader, device):
 
 
 # Parameters ---------------------------------------------------------------
-n_epoch = 200
+n_epoch = 1
 batch_size = 16
 is_training = True
 

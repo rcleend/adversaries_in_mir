@@ -119,6 +119,8 @@ optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 # TODO: updata gamma and add to training function
 scheduler = optim.lr_scheduler.MultiplicativeLR(optimizer, lr_lambda=0.1)
 
+print('batch_size: ', batch_size)
+
 if is_training:
   train(
       net=net,

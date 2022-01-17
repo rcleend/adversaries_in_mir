@@ -27,6 +27,7 @@ def get_data_loader(valid=True, batch_size=16):
                       valid=valid
                       )
 
+    print('added drop last')
     return DataLoader(ads, batch_size, shuffle=True, drop_last=True)
 
 

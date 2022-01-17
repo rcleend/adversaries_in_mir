@@ -99,7 +99,6 @@ def eval(net, data_loader, device):
 n_epoch = 200
 batch_size = 16
 is_training = True
-model_name='save_test'
 
 
 # Train Network ------------------------------------------------------------
@@ -140,9 +139,9 @@ if is_training:
       n_epoch=n_epoch
       )
 
-  save_model(net, model_name)
+  save_model(net, n_epoch)
 
-net.load_state_dict(torch.load(os.path.join(model_path, 'self-trained/', model_name + '.tar')))
+# net.load_state_dict(torch.load(os.path.join(model_path, 'self-trained/', model_name + '.tar')))
 
 # Evaluate Network ---------------------------------------------------------
 

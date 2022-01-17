@@ -4,7 +4,7 @@ from instrument_classifier.utils.paths import model_path
 
 
 def save_model(nn, EPOCH):
-    model_name = "model_ep" + EPOCH
+    model_name = "model_ep" + str(EPOCH)
     torch.save({
         'epoch': EPOCH,
         'model_state_dict': nn.state_dict(),},

@@ -14,7 +14,7 @@ from instrument_classifier.utils.paths import d_path, model_path
 from instrument_classifier.train.save import save_model
 
 
-def get_data_loader(valid=True, batch_size=16):
+def get_data_loader(valid=True, batch_size=1):
     files = get_files(valid)
     params = attr.AttrDict({'feature': 'torch', 'feature_length': None,
                             'pre_computed': False, 'sample_wise_norm': False})
@@ -97,7 +97,7 @@ def eval(net, data_loader, device):
 
 # Parameters ---------------------------------------------------------------
 n_epoch = 1
-batch_size = 16
+batch_size = 1
 is_training = True
 
 

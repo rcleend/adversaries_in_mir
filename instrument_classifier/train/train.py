@@ -27,6 +27,7 @@ def get_data_loader(valid=True, batch_size=16):
                       valid=valid
                       )
 
+    print('added drop last')
     return DataLoader(ads, batch_size, shuffle=True, drop_last=True)
 
 
@@ -91,7 +92,7 @@ def eval(net, data_loader, device):
 
 # Parameters ---------------------------------------------------------------
 n_epoch = 200
-batch_size = 16
+batch_size = 1
 is_training = True
 model_name='save_test'
 

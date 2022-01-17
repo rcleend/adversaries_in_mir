@@ -3,7 +3,7 @@ import torch
 from instrument_classifier.utils.paths import model_path
 
 
-def save_model(nn):
+def save_model(nn, EPOCH):
     model_name = model_ep + EPOCH
     torch.save({
         'epoch': EPOCH,

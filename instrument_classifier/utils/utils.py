@@ -78,7 +78,8 @@ def _load_checkpoint(net, path, epoch=-1, optimizer=None):
         checkpoint = torch.load(file_path, map_location='cuda:0')
     else:
         checkpoint = torch.load(file_path, map_location='cpu')
-    print("epoch print: ",epoch)
+    print("epoch print: ", epoch)
+    print("epoch print: ", checkpoint)
     epoch = checkpoint['epoch']
     net.load_state_dict(checkpoint['model_state_dict'])
     if optimizer is not None:

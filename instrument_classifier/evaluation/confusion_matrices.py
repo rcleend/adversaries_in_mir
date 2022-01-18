@@ -80,4 +80,4 @@ def _log_confusion_matrix(log_file_path):
 
 
 if __name__ == '__main__':
-    plot_confusion_matrix('test.png', os.path.join(misc_path, 'logs/fgsm_test_torch16s1f.csv'))
+    plot_confusion_matrix('test.png', os.path.join(misc_path, 'logs/train_basic_2epoch.csv'))

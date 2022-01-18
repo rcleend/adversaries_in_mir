@@ -1,4 +1,4 @@
-experiment = test
+experiment = train
 log_file = log.csv
 validation_set = True
 

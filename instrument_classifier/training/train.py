@@ -68,15 +68,22 @@ def run_training(train_loader, valid_loader, logger, params, save_path):
     lr_scheduler = optim.lr_scheduler.MultiStepLR(optimiser, milestones=[params.drop_ep], gamma=params.drop_rate)
 
     for ep in range(1, params.epochs + 1):
+        print("Epoch: ", ep)
         # do training
         train_loss, train_acc = do_train_epoch(net, train_loader, criterion, optimiser, device)
         if valid_loader is not None:
             # do validation, write to log
             valid_loss, valid_acc = do_valid_epoch(net, valid_loader, criterion, device)
             logger.append([ep, train_loss, train_acc, valid_loss, valid_acc])
+            print("train loss: ", train_loss)
+            print("train accuracy: ", train_acc)
+            print("validation loss: ", valid_loss)
+            print("validation accuracy: ", valid_acc)
         else:
             # write to log
             logger.append([ep, train_loss, train_acc])
+            print("train loss: ", train_loss)
+            print("train accuracy: ", train_acc)
 
         if ep % params.save_interval == 0:
             save_checkpoint(ep, net, optimiser, path=save_path)

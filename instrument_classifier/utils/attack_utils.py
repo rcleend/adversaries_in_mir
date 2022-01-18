@@ -9,10 +9,7 @@ from instrument_classifier.utils.paths import d_path, adversary_path, misc_path
 
 def get_feature_fun(model_name):
     """ Given name of saved model, returns according norm-file-name for features. """
-    if 'torch' in model_name:
-        return get_torch_spec
-    else:
-        raise NotImplementedError('Invalid feature')
+    return get_torch_spec
 
 
 def get_net():

@@ -9,7 +9,7 @@ from shutil import copyfile
 from instrument_classifier.utils.paths import *
 from instrument_classifier.utils.utils import get_params
 from instrument_classifier.utils.logging_utils import Logger
-from instrument_classifier.training.avgpool_cnn import AveragePoolCNN
+from instrument_classifier.utils.avgpool_cnn import AveragePoolCNN
 from instrument_classifier.data.data_helper import compute_std_mean, get_single_label_files
 from instrument_classifier.training.train_utils import save_checkpoint, get_train_loader, get_valid_loader, \
     check_and_create_training_dir

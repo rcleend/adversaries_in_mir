@@ -1,0 +1,19 @@
+experiment = test
+log_file = log.csv
+validation_set = True
+
+# model related
+epochs = 200
+batch_size = 16
+save_interval = 50
+
+# learning rate
+lr = 0.001
+drop_ep = 90
+drop_rate = 0.1
+
+# feature definition
+feature = torch
+feature_length = 116
+pre_computed = False
+sample_wise_norm = False

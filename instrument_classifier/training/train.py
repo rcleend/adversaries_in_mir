@@ -90,7 +90,7 @@ def _preps(params, train_files, valid_files, logging_path):
     if params.sample_wise_norm:
         norm_file_path = None
     else:
-        mean, std = compute_std_mean(train_files, d_path)
+        mean, std = compute_std_mean(train_files, training_data_path)
         np.savetxt(os.path.join(logging_path, 'mean.csv'), mean, delimiter=',')
         np.savetxt(os.path.join(logging_path, 'std.csv'), std, delimiter=',')
         norm_file_path = os.path.join(logging_path, '{}.csv')

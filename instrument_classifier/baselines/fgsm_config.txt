@@ -1,4 +1,4 @@
-experiment = fgsm_test
-model_to_attack = self_trained_torch
+experiment = fgsm_test_onOurModel
+model_to_attack = first_manual_training
 epsilon = 0.1
 valid = True

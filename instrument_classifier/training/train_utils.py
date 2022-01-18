@@ -4,7 +4,6 @@ import attrdict as attr
 from torch.utils.data import DataLoader
 from instrument_classifier.data.datasets import AudioDataset
 import torch
-import torchvision
 
 def save_checkpoint(epoch, net, optimizer, path):
     """ Saves CNN and important parameters of current epoch. """

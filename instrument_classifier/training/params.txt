@@ -4,9 +4,9 @@ log_file = log.csv
 validation_set = True
 
 # model related
-epochs = 1
+epochs = 10
 batch_size = 16
-save_interval = 1
+save_interval = 5
 
 # learning rate
 lr = 0.001

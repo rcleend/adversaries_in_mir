@@ -23,7 +23,8 @@ def get_train_loader(files, params, d_path, norm_file_path):
         d_path = os.path.join(d_path, params.pre_computed)
     feature_dict = attr.AttrDict({'feature': params.feature, 'feature_length': params.feature_length,
                                   'pre_computed': params.pre_computed, 'sample_wise_norm': params.sample_wise_norm})
-    ads = AudioDataset(files, d_path, feature_dict=feature_dict, norm_file_path=norm_file_path)
+    data_path = d_path + "/train_curated"
+    ads = AudioDataset(files, data_path, feature_dict=feature_dict, norm_file_path=norm_file_path)
     return DataLoader(ads, batch_size=params.batch_size, shuffle=True)
 
 

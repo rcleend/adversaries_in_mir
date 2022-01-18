@@ -2,7 +2,7 @@ from pathlib import Path
 
 # path pointing to data
 # TODO: change to test data when testing
-d_path = 'instrument_classifier/data/data_files/train_curated'
+d_path = 'instrument_classifier/data/data_files'
 # path pointing to .csv files (containing label information)
 csv_path = 'instrument_classifier/data/data_files/meta'
 

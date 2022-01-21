@@ -3,23 +3,24 @@ import torch
 from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
 
 def eval_def_nets(def_nets, data_loader):
-    # Iterate through all the defence networks and average their ouput probabilities
+    # Iterate through all the defence networks
+    dataset_size = len(data_loader.dataset)
     for i, net in enumerate(def_nets):
         correct_total = 0
-        for j, (x_batch, y_batch) in enumerate(data_loader):
-            y_pred = net(x_batch)
+        for j, (x, y) in enumerate(data_loader):
+            y_pred = net(x)
             y_pred_max = torch.argmax(y_pred, dim=1)
-            print(f'net: {j}, batch: {i}')
-            correct_total += torch.sum(torch.eq(y_pred_max, y_batch)).item()
+            print(f'net: {i}, sample {j} out of {dataset_size}')
+            correct_total += torch.sum(torch.eq(y_pred_max, y)).item()
         print('correct total:',correct_total)
 
 
 
 # Create a dataloader for the FGSM attack samples
-attack_loader = get_data(model_name='torch16s1f',adversary='FGSM',valid_set=True)
+fgsm_loader = get_data(model_name='torch16s1f',adversary='FGSM',valid_set=True)
 
 # Create a dataloader for the PGDN attack samples
-attack_loader = get_data(model_name='torch16s1f',adversary='PGDN',valid_set=True)
+pgdn_loader = get_data(model_name='torch16s1f',adversary='PGDN',valid_set=True)
 
 # Create a dataloader for the original samples
 orig_loader = get_data(model_name='torch16s1f',adversary=None,valid_set=True)
@@ -39,8 +40,10 @@ for i in range(n_defence_nets):
 eval_def_nets(nets, orig_loader)
 
 # Iterate through all the defence networks and average their FGSM probabilities
+eval_def_nets(nets, fgsm_loader)
 
 # Iterate through all the defence networks and average their PGDN probabilities
+eval_def_nets(nets, pgdn_loader)
 
 # Get the single label with the highest output probability
 

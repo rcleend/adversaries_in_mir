@@ -31,7 +31,7 @@ def _eval_def_nets(def_nets, data_loader, device):
             print(y_pred.item())
             predictions[sample_name] = {
                 'label': y.item(), 
-                'pred': y_pred.item(), 
+                'pred': y_pred, 
                 }
             print(f'net: {i + 1}, sample {j}/{dataset_size}')
 

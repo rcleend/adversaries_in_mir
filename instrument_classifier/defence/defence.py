@@ -2,7 +2,7 @@ import os
 import torch
 from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
 
-def eval_def_nets(def_nets, data_loader):
+def eval_def_nets(def_nets, data_loader, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
     for i, net in enumerate(def_nets):
@@ -49,10 +49,10 @@ for i in range(n_defence_nets):
 # eval_def_nets(nets, orig_loader)
 
 # Iterate through all the defence networks and average their FGSM probabilities
-eval_def_nets(nets, fgsm_loader)
+eval_def_nets(nets, fgsm_loader, device)
 
 # Iterate through all the defence networks and average their PGDN probabilities
-eval_def_nets(nets, pgdn_loader)
+eval_def_nets(nets, pgdn_loader, device)
 
 # Get the single label with the highest output probability
 

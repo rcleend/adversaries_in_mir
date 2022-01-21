@@ -34,11 +34,11 @@ def _eval_def_nets(def_nets, data_loader, device):
             
             # y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
             # y_pred_class = torch.argmax(y_pred, dim=1)
-            print(f'net: {i +1 }, sample {j + 1}/{n_defence_nets}')
+            print(f'net: {i +1 }, sample {j + 1}/{dataset_size}')
 
-            predictions = _update_pred_dict(predictions, key=sample_name[0], values={'y': y, 'y_pred': y_pred})
+            # predictions = _update_pred_dict(predictions, key=sample_name[0], values={'y': y, 'y_pred': y_pred})
     
-    _avg_pred_dict(predictions)
+    # _avg_pred_dict(predictions)
 
 # Load Cuda device if available
 if torch.cuda.is_available():

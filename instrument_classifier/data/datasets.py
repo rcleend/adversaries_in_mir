@@ -74,17 +74,10 @@ class AudioDataset(Dataset):
         return len(self.filenames)
 
     def _read_data(self, path, clip):
-        # Navigate to correct path based on test or validation mode
-        if self.valid and os.path.exists(os.path.join(path, 'train_curated')):
-            directory = 'train_curated'
-        elif os.path.exists(os.path.join(path, 'test')):
-            directory = 'test'
-            
-        assert directory
-        path = os.path.join(path, directory)
+        if os.path.exists(os.path.join(path, 'train_curated')):
+            path = os.path.join(path, 'train_curated')
 
         data = self.get_features(file=clip, sample_path=path)
-
         # normalisation
         data = self._normalise(data)
 
@@ -94,7 +87,7 @@ class AudioDataset(Dataset):
         [win_idx] = np.random.choice(windows.shape[0], 1)
         data = windows[win_idx]
         return data.view(1, 100, -1)
-
+        
     def _normalise(self, data):
         if self.norm_file_path is None and not self.feature_dict.sample_wise_norm:
             return data

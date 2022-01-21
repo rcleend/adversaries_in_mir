@@ -10,9 +10,10 @@ def eval_def_nets(def_nets, data_loader):
         for j, (x, y) in enumerate(data_loader):
             y_pred = net(x)
             y_pred_max = torch.argmax(y_pred, dim=1)
-            print(f'net: {i}, sample {j} out of {dataset_size}')
+            print(f'net: {i + 1}, sample {j} out of {dataset_size}')
             correct_total += torch.sum(torch.eq(y_pred_max, y)).item()
         print('correct total:',correct_total)
+        # TODO: analyse and store prediction probabilities
 
 
 

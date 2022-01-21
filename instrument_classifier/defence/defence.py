@@ -27,7 +27,8 @@ def _eval_def_nets(def_nets, data_loader, device):
         for j, (x, y, sample_name) in enumerate(data_loader):
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
             y_pred = net(x)
-            sample_name = str(sample_name)
+            sample_name = str(sample_name).split('"')[1::2] # remove quotes from sample name
+            print(sample_name)
             # y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
             # y_pred_class = torch.argmax(y_pred, dim=1)
 

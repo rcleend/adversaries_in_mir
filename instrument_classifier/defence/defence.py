@@ -10,18 +10,31 @@ def _avg_def_pred(predictions):
     for pred in predictions:
         avg_pred_class + pred
 
+def update_pred_dict(predictions, key, values):
+    if not predictions[key]:
+        predictions[key] = values
+    # else:
+    #     predictions[key][] = values
+
+
 def _eval_def_nets(def_nets, data_loader, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
+    predictions = {}
     for i, net in enumerate(def_nets):
-        predictions = []
         for j, (x, y, sample_name) in enumerate(data_loader):
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
             y_pred = net(x)
-            y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
-            y_pred_class = torch.argmax(y_pred, dim=1)
+            # y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
+            # y_pred_class = torch.argmax(y_pred, dim=1)
+
+            print(y_pred.item())
+            predictions[sample_name] = {
+                'label': y.item(), 
+                'pred': y_pred.item(), 
+                }
             print(f'net: {i + 1}, sample {j}/{dataset_size}')
-            predictions.append([sample_name[0], y.item(), y_pred_class.item(), y_pred_prob.item()])
+
         print(predictions) 
         # TODO: analyse and store prediction probabilities
 

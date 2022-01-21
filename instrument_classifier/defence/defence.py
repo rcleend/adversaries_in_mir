@@ -13,8 +13,10 @@ def _avg_def_pred(predictions):
 def update_pred_dict(predictions, key, values):
     if not predictions[key]:
         predictions[key] = values
-    # else:
-    #     predictions[key][] = values
+    else:
+        predictions[key]['pred'] += values
+    print(predictions)
+    return predictions
 
 
 def _eval_def_nets(def_nets, data_loader, device):
@@ -28,14 +30,8 @@ def _eval_def_nets(def_nets, data_loader, device):
             # y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
             # y_pred_class = torch.argmax(y_pred, dim=1)
 
-            print(y_pred.item())
-            predictions[sample_name] = {
-                'label': y.item(), 
-                'pred': y_pred, 
-                }
             print(f'net: {i + 1}, sample {j}/{dataset_size}')
-
-        print(predictions) 
+            predictions = update_pred_dict(predictions, key=sample_name, values={'label': y, 'pred': y_pred})
         # TODO: analyse and store prediction probabilities
 
 # Load Cuda device if available

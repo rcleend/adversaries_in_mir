@@ -8,6 +8,7 @@ def eval_def_nets(def_nets, data_loader):
     for i, net in enumerate(def_nets):
         correct_total = 0
         for j, (x, y) in enumerate(data_loader):
+            x, y = x.to(device), y.to(device)  # Move the data to the device that is used
             y_pred = net(x)
             y_pred_max = torch.argmax(y_pred, dim=1)
             print(f'net: {i + 1}, sample {j} out of {dataset_size}')
@@ -15,6 +16,13 @@ def eval_def_nets(def_nets, data_loader):
         print('correct total:',correct_total)
         # TODO: analyse and store prediction probabilities
 
+# Load Cuda device if available
+if torch.cuda.is_available():
+  device = torch.device('cuda')
+else:
+  device = torch.device('cpu')
+
+print('device: ', device)
 
 
 # Create a dataloader for the FGSM attack samples
@@ -27,7 +35,7 @@ pgdn_loader = get_data(model_name='torch16s1f',adversary='PGDN',valid_set=True)
 orig_loader = get_data(model_name='torch16s1f',adversary=None,valid_set=True)
 
 # Create original network to get baseline prediction
-orig_net = get_network(model_name='torch16s1f', epoch=-1) # epoch -1 loads the latest epoch available
+orig_net = get_network(model_name='torch16s1f', epoch=-1).to(device) # epoch -1 loads the latest epoch available
 
 # Create multiple networks for all the defence models
 n_defence_nets = 3 #TODO replace with automatic directory detection or parameter
@@ -35,7 +43,7 @@ n_defence_nets = 3 #TODO replace with automatic directory detection or parameter
 nets = []
 for i in range(n_defence_nets):
     model_name = f'defence_{i+1}'
-    nets.append(get_network(model_name=model_name, epoch=-1)) # add defence network to nets array
+    nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities
 # eval_def_nets(nets, orig_loader)

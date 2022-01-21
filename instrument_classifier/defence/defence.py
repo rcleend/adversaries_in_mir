@@ -39,7 +39,7 @@ n_defence_nets = 3 #TODO replace with automatic directory detection or parameter
 
 nets = []
 for i in range(n_defence_nets):
-    model_name = f'defence_{i}'
+    model_name = f'defence_{i+1}'
     nets.append(get_network(model_name=model_name, epoch=-1)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities

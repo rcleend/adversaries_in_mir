@@ -2,7 +2,14 @@ import os
 import torch
 from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
 
-def eval_def_nets(def_nets, data_loader, device):
+def _avg_def_pred(predictions):
+    avg_pred_prob = 0
+    avg_pred_class = 0
+
+    for pred in predictions:
+        avg_pred_class + pred
+
+def _eval_def_nets(def_nets, data_loader, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
     for i, net in enumerate(def_nets):
@@ -10,6 +17,7 @@ def eval_def_nets(def_nets, data_loader, device):
         for j, (x, y) in enumerate(data_loader):
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
             y_pred = net(x)
+            print(y_pred)
             y_pred_max = torch.argmax(y_pred, dim=1)
             print(f'net: {i + 1}, sample {j} out of {dataset_size}')
             correct_total += torch.sum(torch.eq(y_pred_max, y)).item()
@@ -46,13 +54,13 @@ for i in range(n_defence_nets):
     nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities
-eval_def_nets(nets, orig_loader, device)
+_eval_def_nets(nets, orig_loader, device)
 
 # Iterate through all the defence networks and average their FGSM probabilities
-eval_def_nets(nets, fgsm_loader, device)
+_eval_def_nets(nets, fgsm_loader, device)
 
 # Iterate through all the defence networks and average their PGDN probabilities
-eval_def_nets(nets, pgdn_loader, device)
+_eval_def_nets(nets, pgdn_loader, device)
 
 # Get the single label with the highest output probability
 

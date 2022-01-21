@@ -38,7 +38,7 @@ for i in range(n_defence_nets):
     nets.append(get_network(model_name=model_name, epoch=-1)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities
-eval_def_nets(nets, orig_loader)
+# eval_def_nets(nets, orig_loader)
 
 # Iterate through all the defence networks and average their FGSM probabilities
 eval_def_nets(nets, fgsm_loader)

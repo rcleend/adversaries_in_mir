@@ -2,24 +2,14 @@ import os
 import torch
 from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
 
-def eval_def_nets(def_nets, data_loader, device):
+def eval_def_nets(def_nets, data_loader):
     # Iterate through all the defence networks and average their ouput probabilities
     for net in def_nets:
         for i, (x_batch, y_batch) in enumerate(data_loader):
-            x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
             y_pred = net(x_batch)
             y_pred_max = torch.argmax(y_pred, dim=1)
             print(f'net: {i}')
             print(y_pred_max)
-
-
-# Create Cuda devise if possible
-if torch.cuda.is_available():
-  device = torch.device('cuda')
-else:
-  device = torch.device('cpu')
-
-print('device: ', device)
 
 
 # Create a dataloader for the FGSM attack samples
@@ -43,7 +33,7 @@ for i in range(n_defence_nets):
     nets.append(get_network(model_name=model_name, epoch=-1)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities
-eval_def_nets(nets, orig_loader, device)
+eval_def_nets(nets, orig_loader)
 
 # Iterate through all the defence networks and average their FGSM probabilities
 

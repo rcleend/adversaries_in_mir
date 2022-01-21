@@ -87,7 +87,7 @@ class AudioDataset(Dataset):
         [win_idx] = np.random.choice(windows.shape[0], 1)
         data = windows[win_idx]
         return data.view(1, 100, -1)
-        
+
     def _normalise(self, data):
         if self.norm_file_path is None and not self.feature_dict.sample_wise_norm:
             return data
@@ -109,4 +109,4 @@ class AudioDataset(Dataset):
 
         [tag] = self.labels.get(clip)
         label = torch.tensor(self.label_map[tag]).long()
-        return data, label
+        return data, label, clip

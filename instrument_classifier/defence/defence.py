@@ -9,7 +9,7 @@ def eval_def_nets(def_nets, data_loader, device):
             x_batch, y_batch = x_batch.to(device), y_batch.to(device)  # Move the data to the device that is used
             y_pred = net(x_batch)
             y_pred_max = torch.argmax(y_pred, dim=1)
-            print('net: '.join(i))
+            print(f'net: {i}')
             print(y_pred_max)
 
 
@@ -39,7 +39,7 @@ n_defence_nets = 3 #TODO replace with automatic directory detection or parameter
 
 nets = []
 for i in range(n_defence_nets):
-    model_name = 'defence_'.join(i)
+    model_name = f'defence_{i}'
     nets.append(get_network(model_name=model_name)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities

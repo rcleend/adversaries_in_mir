@@ -28,13 +28,13 @@ def _eval_def_nets(def_nets, data_loader, device):
         for j, (x, y, sample_name) in enumerate(data_loader):
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
             y_pred = net(x)
-            print(sample_name[0])
+            print(sample_name[0].rsplit('.', 1)[0] + '.wav')
             
             # y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
             # y_pred_class = torch.argmax(y_pred, dim=1)
 
             print(f'net: {i + 1}, sample {j}/{dataset_size}')
-            predictions = update_pred_dict(predictions, key=sample_name[0], values={'label': y, 'pred': y_pred})
+            predictions = update_pred_dict(predictions, key=sample_name[0].rsplit('.', 1)[0] + '.wav', values={'label': y, 'pred': y_pred})
         # TODO: analyse and store prediction probabilities
 
 # Load Cuda device if available

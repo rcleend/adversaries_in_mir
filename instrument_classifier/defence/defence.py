@@ -17,7 +17,7 @@ def _eval_def_nets(def_nets, data_loader, device):
         for j, (x, y) in enumerate(data_loader):
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
             y_pred = net(x)
-            print(torch.argmax(y_pred, dim=12))
+            print(torch.argmax(y_pred, dim=1))
             y_pred_max = torch.argmax(y_pred, dim=1)
             print(f'net: {i + 1}, sample {j} out of {dataset_size}')
             correct_total += torch.sum(torch.eq(y_pred_max, y)).item()

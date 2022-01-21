@@ -1,3 +1,4 @@
+from ast import keyword
 import os
 import torch
 import torch.nn as nn
@@ -12,7 +13,7 @@ def _avg_def_pred(predictions):
 
 def update_pred_dict(predictions, key, values):
     if not predictions[key]:
-        predictions[key] = values
+        predictions.update(key, values)
     else:
         predictions[key]['pred'] += values
     print(predictions)

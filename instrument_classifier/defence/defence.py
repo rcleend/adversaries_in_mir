@@ -38,7 +38,7 @@ def _eval_def_nets(def_nets, data_loader, device):
 
             predictions = _update_pred_dict(predictions, key=sample_name[0], values={'y': y, 'y_pred': y_pred})
     
-    # _avg_pred_dict(predictions)
+    _avg_pred_dict(predictions)
 
 # Load Cuda device if available
 if torch.cuda.is_available():

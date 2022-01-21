@@ -33,7 +33,7 @@ def _eval_def_nets(def_nets, data_loader, device):
             # y_pred_class = torch.argmax(y_pred, dim=1)
 
             print(f'net: {i + 1}, sample {j}/{dataset_size}')
-            predictions = update_pred_dict(predictions, key=sample_name, values={'label': y, 'pred': y_pred})
+            predictions = update_pred_dict(predictions, key=sample_name[0], values={'label': y, 'pred': y_pred})
         # TODO: analyse and store prediction probabilities
 
 # Load Cuda device if available

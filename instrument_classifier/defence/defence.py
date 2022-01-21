@@ -13,7 +13,7 @@ def _avg_def_pred(predictions):
 
 def update_pred_dict(predictions, key, values):
     if key in predictions:
-        predictions[key]['pred'] += values
+        predictions[key]['pred'] += values['pred']
     else:
         predictions[key] =  values
     return predictions

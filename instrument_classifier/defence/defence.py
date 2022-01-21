@@ -26,10 +26,10 @@ print('device: ', device)
 
 
 # Create a dataloader for the FGSM attack samples
-fgsm_loader = get_data(model_name='torch16s1f',adversary='FGSM',valid_set=True)
+fgsm_loader = get_data(model_name='torch16s1f',adversary='fgsm_test',valid_set=True)
 
 # Create a dataloader for the PGDN attack samples
-pgdn_loader = get_data(model_name='torch16s1f',adversary='PGDN',valid_set=True)
+pgdn_loader = get_data(model_name='torch16s1f',adversary='pgdn_test',valid_set=True)
 
 # Create a dataloader for the original samples
 orig_loader = get_data(model_name='torch16s1f',adversary=None,valid_set=True)
@@ -46,7 +46,7 @@ for i in range(n_defence_nets):
     nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities
-# eval_def_nets(nets, orig_loader)
+eval_def_nets(nets, orig_loader, device)
 
 # Iterate through all the defence networks and average their FGSM probabilities
 eval_def_nets(nets, fgsm_loader, device)

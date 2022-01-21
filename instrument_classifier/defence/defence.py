@@ -7,19 +7,19 @@ from instrument_classifier.evaluation.evaluation_utils import get_data, get_netw
 def _avg_pred_dict(predictions): 
     avg_pred = {}
     for key, value in predictions.items():
-        y = value['y']
-        y_pred = value['y_pred'] / n_defence_nets
+        y = value[0]
+        y_pred = value[1] / n_defence_nets
         y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
         y_pred_class = torch.argmax(y_pred, dim=1)
 
-        avg_pred[key] = {'y': y, 'y_pred_class': y_pred_class, 'y_pred_prob': y_pred_prob} 
+        avg_pred[key] = [y, y_pred_class, y_pred_prob]
     print(avg_pred)
 
-def _update_pred_dict(predictions, key, values):
+def _update_pred_dict(predictions, key, y, y_pred):
     if key in predictions:
-        predictions[key]['y_pred'] += values['y_pred']
+        predictions[key][1] += y_pred
     else:
-        predictions[key] =  values
+        predictions[key] =  [y, y_pred]
     return predictions
 
 
@@ -36,7 +36,7 @@ def _eval_def_nets(def_nets, data_loader, device):
             # y_pred_class = torch.argmax(y_pred, dim=1)
             print(f'net: {i +1 }, sample {j + 1}/{dataset_size}')
 
-            # predictions = _update_pred_dict(predictions, key=sample_name[0], values={'y': y, 'y_pred': y_pred})
+            predictions = _update_pred_dict(predictions, key=sample_name[0], y=y, y_pred=y_pred)
     
     # _avg_pred_dict(predictions)
 

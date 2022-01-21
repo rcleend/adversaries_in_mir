@@ -21,7 +21,7 @@ def _eval_def_nets(def_nets, data_loader, device):
             y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
             y_pred_class = torch.argmax(y_pred, dim=1)
             print(f'net: {i + 1}, sample {j}/{dataset_size}')
-            predictions.append([sample_name, y, y_pred_class, y_pred_prob])
+            predictions.append([sample_name.item(), y.item(), y_pred_class.item(), y_pred_prob.item()])
         print(predictions) 
         # TODO: analyse and store prediction probabilities
 

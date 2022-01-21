@@ -14,18 +14,17 @@ def _eval_def_nets(def_nets, data_loader, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
     for i, net in enumerate(def_nets):
-        correct_total = 0
+        predictions = []
         for j, (x, y) in enumerate(data_loader):
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
+            print(y)
             y_pred = net(x)
             y_pred_prob = torch.nn.functional.softmax(y_pred, dim=1)
-            y_pred_max = torch.argmax(y_pred_prob, dim=1)
-            print(y_pred_max)
-            y_pred_max = torch.argmax(y_pred, dim=1)
-            print(y_pred_max)
-            print(f'net: {i + 1}, sample {j} out of {dataset_size}')
-            correct_total += torch.sum(torch.eq(y_pred_max, y)).item()
-        print('correct total:',correct_total)
+            y_pred_class = torch.argmax(y_pred_prob, dim=1)
+            sample_name = data_loader.dataset.samples[j]
+            print(f'net: {i + 1}, sample {j}/{dataset_size}')
+            predictions.append([sample_name, y, y_pred_class, y_pred_prob])
+        print(predictions) 
         # TODO: analyse and store prediction probabilities
 
 # Load Cuda device if available

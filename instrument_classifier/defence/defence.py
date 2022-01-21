@@ -37,6 +37,8 @@ def _eval_def_nets(def_nets, data_loader, device):
             print(f'net: {i +1 }, sample {j + 1}/{dataset_size}')
 
             predictions = _update_pred_dict(predictions, key=sample_name[0], y=y, y_pred=y_pred)
+        print(len(predictions))
+        print(predictions[0][1])
     
     # _avg_pred_dict(predictions)
 

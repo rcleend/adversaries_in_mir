@@ -109,4 +109,5 @@ class AudioDataset(Dataset):
 
         [tag] = self.labels.get(clip)
         label = torch.tensor(self.label_map[tag]).long()
+        print(clip)
         return data, label, clip

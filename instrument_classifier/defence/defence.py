@@ -32,7 +32,7 @@ attack_loader = get_data(model_name='torch16s1f',adversary='PGDN',valid_set=True
 orig_loader = get_data(model_name='torch16s1f',adversary=None,valid_set=True)
 
 # Create original network to get baseline prediction
-orig_net = get_network(model_name='torch16s1f')
+orig_net = get_network(model_name='torch16s1f', epoch=-1) # epoch -1 loads the latest epoch available
 
 # Create multiple networks for all the defence models
 n_defence_nets = 3 #TODO replace with automatic directory detection or parameter

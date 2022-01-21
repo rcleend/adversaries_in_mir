@@ -4,12 +4,15 @@ from instrument_classifier.evaluation.evaluation_utils import get_data, get_netw
 
 def eval_def_nets(def_nets, data_loader):
     # Iterate through all the defence networks and average their ouput probabilities
-    for net in def_nets:
-        for i, (x_batch, y_batch) in enumerate(data_loader):
+    for i, net in enumerate(def_nets):
+        correct_total = 0
+        for j, (x_batch, y_batch) in enumerate(data_loader):
             y_pred = net(x_batch)
             y_pred_max = torch.argmax(y_pred, dim=1)
-            print(f'net: {i}')
-            print(y_pred_max)
+            print(f'net: {j}, batch: {i}')
+            correct_total += torch.sum(torch.eq(y_pred_max, y_batch)).item()
+        print('correct total:',correct_total)
+
 
 
 # Create a dataloader for the FGSM attack samples

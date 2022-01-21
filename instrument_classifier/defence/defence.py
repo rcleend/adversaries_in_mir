@@ -19,7 +19,7 @@ def _eval_def_nets(def_nets, data_loader, device):
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
             print(y)
             y_pred = net(x)
-            y_pred_prob = torch.nn.functional.softmax(y_pred, dim=1)
+            y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
             y_pred_class = torch.argmax(y_pred_prob, dim=1)
             print(f'net: {i + 1}, sample {j}/{dataset_size}')
             predictions.append([sample_name, y, y_pred_class, y_pred_prob])

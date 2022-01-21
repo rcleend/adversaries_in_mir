@@ -36,10 +36,8 @@ def _eval_def_nets(def_nets, data_loader, device):
             # y_pred_class = torch.argmax(y_pred, dim=1)
             print(f'net: {i +1 }, sample {j + 1}/{dataset_size}')
 
-            predictions = _update_pred_dict(predictions, key=sample_name[0], y=y, y_pred=y_pred)
-        print(len(predictions))
-        key, values = next(iter(predictions.items()))
-        print(values[1])
+            # TODO: creates out of memory issue, fix this
+            # predictions = _update_pred_dict(predictions, key=sample_name[0], y=y, y_pred=y_pred)
     
     # _avg_pred_dict(predictions)
 

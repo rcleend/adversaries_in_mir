@@ -70,30 +70,29 @@ defence_name = 'test'
 # Create original network to get baseline prediction
 orig_net = get_network(model_name='torch16s1f', epoch=-1).to(device) # epoch -1 loads the latest epoch available
 
+# Create defence networks
 nets = []
 for i in range(n_defence_nets):
     model_name = f'defence_{i+1}'
     nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
 
-pred_orig_net = _get_pred(nets=[orig_net], data_loader=orig_loader, pred_name='orig net', device=device)
-# pred_fgsm_net = _get_pred(nets=[orig_net], data_loader=fgsm_loader, pred_name='FGSM net', device=device)
-# pred_pgdn_net = _get_pred(nets=[orig_net], data_loader=pgdn_loader, pred_name='PGDN net', device=device)
+# Get predictions of all the data using the original network
+pred_orig_net = _get_pred(nets=[orig_net], data_loader=orig_loader, pred_name='orig net using orig data', device=device)
+pred_fgsm_net = _get_pred(nets=[orig_net], data_loader=fgsm_loader, pred_name='orig net using FGSM data', device=device)
+pred_pgdn_net = _get_pred(nets=[orig_net], data_loader=pgdn_loader, pred_name='orig net using PGDN data', device=device)
 
-# Iterate through all the defence networks and return the average prob of the orig data pred
-pred_orig_def = _get_pred(nets=nets, data_loader=orig_loader, pred_name='orig def', device=device)
-
-# Iterate through all the defence networks and return the average prob of the orig data pred
-# pred_fgsm_def = _get_pred(nets=nets, data_loader=fgsm_loader, pred_name='FGSM def', device=device)
-
-# Iterate through all the defence networks and return the average prob of the orig data pred
-# pred_pgdn_def = _get_pred(nets=nets, data_loader=pgdn_loader, pred_name='PGDN def', device=device)
+# Get predictions of all the data using the defence networks
+pred_orig_def = _get_pred(nets=nets, data_loader=orig_loader, pred_name='def using orig data', device=device)
+pred_fgsm_def = _get_pred(nets=nets, data_loader=fgsm_loader, pred_name='def using FGSM data', device=device)
+pred_pgdn_def = _get_pred(nets=nets, data_loader=pgdn_loader, pred_name='def using PGDN data', device=device)
 
 # Concat all the pred df together into a total pred df
 total_pred_df = pred_orig_net
-# total_pred_df = pd.concat([total_pred_df, pred_fgsm_net.reindex(total_pred_df.index)], axis=1)
-# total_pred_df = pd.concat([total_pred_df, pred_pgdn_net.reindex(total_pred_df.index)], axis=1)
+total_pred_df = total_pred_df.merge(pred_fgsm_net, how='inner', on=['Sample Name', 'Label'])
+total_pred_df = total_pred_df.merge(pred_pgdn_net, how='inner', on=['Sample Name', 'Label'])
 total_pred_df = total_pred_df.merge(pred_orig_def, how='inner', on=['Sample Name', 'Label'])
-# total_pred_df = pd.concat([total_pred_df, pred_fgsm_def.reindex(total_pred_df.index)], axis=1)
-# total_pred_df = pd.concat([total_pred_df, pred_pgdn_def.reindex(total_pred_df.index)], axis=1)
+total_pred_df = total_pred_df.merge(pred_fgsm_def, how='inner', on=['Sample Name', 'Label'])
+total_pred_df = total_pred_df.merge(pred_pgdn_def, how='inner', on=['Sample Name', 'Label'])
 
+# Add predictions to CSV
 _add_preds_to_csv(total_pred_df)

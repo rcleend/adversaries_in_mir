@@ -32,14 +32,15 @@ def _get_pred(nets, data_loader, pred_name, device):
                 y_pred_sum += net(x) # Update sum of predicted y's
             
             y_avg = y_pred_sum /len(nets) # Calculate average predicted y based on sum of predicted y's
+            print(y_avg)
             y_avg_pred = torch.argmax(y_avg, dim=1) # Get the predicted class based on the average predicion of all the networkds
             y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1)) # Get the probability of the average predicted class
-            y_act_prob = nn.functional.softmax(y_avg[y.item()],dim=0) # Get the predicted probability of the actuall class
+            # y_act_prob = nn.functional.softmax(y_avg[y.item()],dim=0) # Get the predicted probability of the actuall class
 
 
             # Create dataframe containing new prediction
-            new_pred_df = pd.DataFrame(data=[[sample_name[0], y.item(), y_avg_pred.item(), y_act_prob.item(), y_avg_prob.item()]]) 
-            new_pred_df.columns =['Sample Name', 'Label', f'Pred {pred_name}', f'Prob act {pred_name}', f'Prob pred {pred_name}']
+            new_pred_df = pd.DataFrame(data=[[sample_name[0], y.item(), y_avg_pred.item(), y_avg_prob.item()]]) 
+            new_pred_df.columns =['Sample Name', 'Label', f'Pred {pred_name}', f'Prob pred {pred_name}']
 
             all_pred_df = all_pred_df.append(new_pred_df) # Add new prediction to dataframe containing all previous predictions
     

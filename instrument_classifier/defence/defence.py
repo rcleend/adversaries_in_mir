@@ -41,7 +41,7 @@ def _get_pred(nets, data_loader, pred_name, device):
 
             all_pred_df = all_pred_df.append(new_pred_df) # Add new prediction to dataframe containing all previous predictions
     
-    # _add_pred_to_csv(all_pred_df, defence_name, data_name)
+    return all_pred_df
 
 # Load Cuda device if available
 if torch.cuda.is_available():

@@ -10,7 +10,7 @@ import pandas as pd
 
 
 def _add_preds_to_csv(df):
-    csv_path = os.path.join(misc_path, f'defences/defence_{defence_name}')
+    csv_path = os.path.join(misc_path, f'defences/defence_{defence_name}.csv')
     df.to_csv(csv_path, index=False) # Save CSV
 
 

@@ -8,11 +8,11 @@ from instrument_classifier.evaluation.evaluation_utils import get_data, get_netw
 from instrument_classifier.utils.paths import misc_path
 
 
-def _add_pred_to_csv(sample_name, y, y_avg):
+def _add_pred_to_csv(sample_name, y, y_avg, data_name):
     y_avg_class = torch.argmax(y_avg, dim=1)
     y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1))
 
-    with open(os.path.join(misc_path, f'defences/defence_{sample_name}'), 'w', encoding='UTF8') as f:
+    with open(os.path.join(misc_path, f'defences/defence_{data_name}.csv'), 'w', encoding='UTF8') as f:
         writer = csv.writer(f)
 
         # write the header

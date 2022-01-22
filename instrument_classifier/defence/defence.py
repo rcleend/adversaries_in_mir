@@ -10,9 +10,9 @@ import pandas as pd
 
 
 def _add_pred_to_csv(all_pred_df, defence_name, data_name):
-    csv_path = f'defences/defence_{defence_name}.csv'
+    csv_path = os.path.join(misc_path, f'defences/defence_{defence_name}.csv')
 
-    if os.path.isfile(os.path.join(misc_path, csv_path)): # Check if CSV already exists
+    if os.path.isfile(csv_path): # Check if CSV already exists
         csv_df = pd.read_csv(csv_path) # Read CSV
 
         # Append new columns to existing CSV dataframe

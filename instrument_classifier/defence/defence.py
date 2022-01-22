@@ -1,14 +1,25 @@
 from ast import keyword
 import os
+import csv
 import torch
 import torch.nn as nn
-from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
 from tqdm import tqdm
+from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
+from instrument_classifier.utils.paths import log_path
 
 
 def _add_pred_to_csv(sample_name, y, y_avg):
     y_avg_class = torch.argmax(y_avg, dim=1)
     y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1))
+
+    with open(os.path.join(log_path, f'defence_{sample_name}'), 'w', encoding='UTF8') as f:
+        writer = csv.writer(f)
+
+        # write the header
+        # writer.writerow()
+
+        # write the data
+        writer.writerow([sample_name, y.item(), y_avg_class.item(), y_avg_prob])
 
     # print(sample_name, y.item(), y_avg_class.item(), y_avg_prob.item())
 
@@ -19,7 +30,7 @@ def _add_pred_to_csv(sample_name, y, y_avg):
 def _eval_def_nets(def_nets, data_loader, data_name, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
-    with tqdm(total=dataset_size, desc=f'Running defence on {data_name}', bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
+    with tqdm(total=dataset_size, desc=f'Running defence on {data_name} samples', bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
         for i, (x, y, sample_name) in enumerate(data_loader):
             pbar.update(1)
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
@@ -65,13 +76,13 @@ for i in range(n_defence_nets):
     nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities
-_eval_def_nets(nets, orig_loader, 'orignal samples', device)
+_eval_def_nets(nets, orig_loader, 'original', device)
 
 # Iterate through all the defence networks and average their FGSM probabilities
-_eval_def_nets(nets, fgsm_loader, 'FGSM samples', device)
+_eval_def_nets(nets, fgsm_loader, 'FGSM', device)
 
 # Iterate through all the defence networks and average their PGDN probabilities
-_eval_def_nets(nets, pgdn_loader, 'PGDN samples', device)
+_eval_def_nets(nets, pgdn_loader, 'PGDN', device)
 
 # Get the single label with the highest output probability
 

@@ -1,6 +1,7 @@
 from ast import keyword
 import os
 import csv
+import argparse
 import torch
 import torch.nn as nn
 from tqdm import tqdm
@@ -9,8 +10,8 @@ from instrument_classifier.utils.paths import misc_path
 import pandas as pd
 
 
-def _add_preds_to_csv(df):
-    csv_path = os.path.join(misc_path, f'defences/defence_{defence_name}.csv')
+def _add_preds_to_csv(df, csv_name):
+    csv_path = os.path.join(misc_path, f'defences/{csv_name}.csv')
     df.to_csv(csv_path, index=False) # Save CSV
 
 
@@ -46,6 +47,22 @@ def _get_pred(nets, data_loader, pred_name, device):
     
     return all_pred_df
 
+# START DEFENCE ===========================================================
+
+# Parse arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('--n_def_nets', default=3, help='Amount of defence networks')
+parser.add_argument('--csv_name', default='defences', help='Ouput csv name it will be saved as')
+args = parser.parse_args()
+
+n_defence_nets = args.n_def_nets #TODO replace with automatic directory detection or parameter
+
+# Add defence name, TODO: replace with input argument
+csv_name = args.csv_name
+
+
+
+
 # Load Cuda device if available
 if torch.cuda.is_available():
   device = torch.device('cuda')
@@ -63,12 +80,6 @@ pgdn_loader = get_data(model_name='torch16s1f',adversary='pgdn_test',valid_set=T
 
 # Create a dataloader for the original samples
 orig_loader = get_data(model_name='torch16s1f',adversary=None,valid_set=True)
-
-# Create multiple networks for all the defence models
-n_defence_nets = 3 #TODO replace with automatic directory detection or parameter
-
-# Add defence name, TODO: replace with input argument
-defence_name = 'test'
 
 # Create original network to get baseline prediction
 orig_net = get_network(model_name='torch16s1f', epoch=-1).to(device) # epoch -1 loads the latest epoch available
@@ -98,4 +109,4 @@ total_pred_df = total_pred_df.merge(pred_fgsm_def, how='inner', on=['Sample Name
 total_pred_df = total_pred_df.merge(pred_pgdn_def, how='inner', on=['Sample Name', 'Label'])
 
 # Add predictions to CSV
-_add_preds_to_csv(total_pred_df)
+_add_preds_to_csv(total_pred_df, csv_name)

@@ -65,7 +65,7 @@ def _eval_def_nets(def_nets, data_loader, data_name, defence_name, device):
 
             # Create dataframe containing new prediction
             new_pred_df = pd.DataFrame(data=[sample_name, y.item(), y_avg_class.item(), y_avg_prob.item()]) 
-            new_pred_df.columns =['Sample Name', 'Label', f'{data_name} pred label', f'{data_name} pred prob']
+            # new_pred_df.columns =['Sample Name', 'Label', f'{data_name} pred label', f'{data_name} pred prob']
 
             all_pred_df = all_pred_df.append(new_pred_df) # Add new prediction to dataframe containing all previous predictions
     

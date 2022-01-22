@@ -13,6 +13,7 @@ import pandas as pd
 def _add_preds_to_csv(df, csv_name):
     csv_path = os.path.join(misc_path, f'defences/{csv_name}.csv')
     df.to_csv(csv_path, index=False) # Save CSV
+    print(f'Successfully saved csv: {csv_path}')
 
 
 def _get_pred(nets, data_loader, pred_name, device):

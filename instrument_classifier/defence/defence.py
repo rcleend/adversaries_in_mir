@@ -39,7 +39,6 @@ def _get_pred(nets, data_loader, pred_name, device):
             y_avg_prob = torch.max(y_avg_softmax) # Get the highest probability of the average predicted class
             y_act_prob = y_avg_softmax[0][y.item()] # Get the predicted probability of the actual class
 
-
             # Create dataframe containing new prediction
             new_pred_df = pd.DataFrame(data=[[sample_name[0], y.item(), y_avg_pred.item(), y_act_prob.item(), y_avg_prob.item()]]) 
             new_pred_df.columns =['Sample Name', 'Label', f'Pred {pred_name}', f'Prob act {pred_name}', f'Prob pred {pred_name}']
@@ -56,13 +55,8 @@ parser.add_argument('--n_def_nets', default=3, type=int, help='Amount of defence
 parser.add_argument('--csv_name', default='defences', type=str, help='Ouput csv name it will be saved as')
 args = parser.parse_args()
 
-n_defence_nets = args.n_def_nets #TODO replace with automatic directory detection or parameter
-
-# Add defence name, TODO: replace with input argument
+n_defence_nets = args.n_def_nets 
 csv_name = args.csv_name
-
-
-
 
 # Load Cuda device if available
 if torch.cuda.is_available():
@@ -71,7 +65,6 @@ else:
   device = torch.device('cpu')
 
 print('device: ', device)
-
 
 # Create a dataloader for the FGSM attack samples
 fgsm_loader = get_data(model_name='torch16s1f',adversary='fgsm_test',valid_set=True)

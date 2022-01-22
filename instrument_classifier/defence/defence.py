@@ -33,8 +33,9 @@ def _get_pred(nets, data_loader, pred_name, device):
             
             y_avg = y_pred_sum /len(nets) # Calculate average predicted y based on sum of predicted y's
             y_avg_pred = torch.argmax(y_avg, dim=1) # Get the predicted class based on the average predicion of all the networkds
-            y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1)) # Get the probability of the average predicted class
-            y_act_prob = nn.functional.softmax(y_avg[0][y.item()],dim=1) # Get the predicted probability of the actual class
+            y_avg_softmax = nn.functional.softmax(y_avg, dim=1) # Get the probabilities of the average predicted class using softmax
+            y_avg_prob = torch.max(y_avg_softmax) # Get the highest probability of the average predicted class
+            y_act_prob = y_avg_softmax[0][y.item()] # Get the predicted probability of the actual class
 
 
             # Create dataframe containing new prediction

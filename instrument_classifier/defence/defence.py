@@ -51,8 +51,8 @@ def _get_pred(nets, data_loader, pred_name, device):
 
 # Parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--n_def_nets', default=3, help='Amount of defence networks')
-parser.add_argument('--csv_name', default='defences', help='Ouput csv name it will be saved as')
+parser.add_argument('--n_def_nets', default=3, type=int, help='Amount of defence networks')
+parser.add_argument('--csv_name', default='defences', type=str, help='Ouput csv name it will be saved as')
 args = parser.parse_args()
 
 n_defence_nets = args.n_def_nets #TODO replace with automatic directory detection or parameter

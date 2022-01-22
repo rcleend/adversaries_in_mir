@@ -3,6 +3,8 @@ import os
 import torch
 import torch.nn as nn
 from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
+from tqdm import tqdm
+
 
 def _add_pred_to_csv(sample_name, y, y_avg):
     y_avg_class = torch.argmax(y_avg, dim=1)
@@ -14,22 +16,24 @@ def _add_pred_to_csv(sample_name, y, y_avg):
 
 
 
-def _eval_def_nets(def_nets, data_loader, device):
+def _eval_def_nets(def_nets, data_loader, data_name, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
-    for i, (x, y, sample_name) in enumerate(data_loader):
-        x, y = x.to(device), y.to(device)  # Move the data to the device that is used
+    with tqdm(total=dataset_size, desc=f'Running defence on {data_name}', bar_format='{l_bar}{bar} [ time left: {remaining} ]') as pbar:
+        for i, (x, y, sample_name) in enumerate(data_loader):
+            pbar.update(1)
+            x, y = x.to(device), y.to(device)  # Move the data to the device that is used
 
-        # reset y values for each sample
-        y_pred_sum = 0 
+            # reset y values for each sample
+            y_pred_sum = 0 
 
-        for j, net in enumerate(def_nets):
-            y_pred_sum += net(x) # Update sum of predicted y's
+            for j, net in enumerate(def_nets):
+                y_pred_sum += net(x) # Update sum of predicted y's
             
-        y_avg = y_pred_sum /len(def_nets) # Calculate average predicted y based on sum of predicted y's
-        _add_pred_to_csv(sample_name[0], y, y_avg)
+            y_avg = y_pred_sum /len(def_nets) # Calculate average predicted y based on sum of predicted y's
+            _add_pred_to_csv(sample_name[0], y, y_avg)
     
-    # _avg_pred_dict(predictions)
+        # _avg_pred_dict(predictions)
 
 # Load Cuda device if available
 if torch.cuda.is_available():
@@ -61,13 +65,13 @@ for i in range(n_defence_nets):
     nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
 
 # Iterate through all the defence networks and average their baseline probabilities
-_eval_def_nets(nets, orig_loader, device)
+_eval_def_nets(nets, orig_loader, 'orignal samples', device)
 
 # Iterate through all the defence networks and average their FGSM probabilities
-_eval_def_nets(nets, fgsm_loader, device)
+_eval_def_nets(nets, fgsm_loader, 'FGSM samples', device)
 
 # Iterate through all the defence networks and average their PGDN probabilities
-_eval_def_nets(nets, pgdn_loader, device)
+_eval_def_nets(nets, pgdn_loader, 'PGDN samples', device)
 
 # Get the single label with the highest output probability
 

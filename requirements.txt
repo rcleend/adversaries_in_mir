@@ -6,3 +6,4 @@ torch==1.4.0
 torchaudio==0.4.0
 librosa==0.8.0
 h5py==2.10.0
+tqdm

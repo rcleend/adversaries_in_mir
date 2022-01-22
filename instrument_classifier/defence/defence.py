@@ -10,7 +10,7 @@ def _add_pred_to_csv(sample_name, y, y_avg):
     y_avg_class = torch.argmax(y_avg, dim=1)
     y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1))
 
-    print(sample_name, y.item(), y_avg_class.item(), y_avg_prob.item())
+    # print(sample_name, y.item(), y_avg_class.item(), y_avg_prob.item())
 
 
 
@@ -19,7 +19,7 @@ def _add_pred_to_csv(sample_name, y, y_avg):
 def _eval_def_nets(def_nets, data_loader, data_name, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
-    with tqdm(total=dataset_size, desc=f'Running defence on {data_name}', bar_format='{l_bar}{bar} [ time left: {remaining} ]') as pbar:
+    with tqdm(total=dataset_size, desc=f'Running defence on {data_name}', bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
         for i, (x, y, sample_name) in enumerate(data_loader):
             pbar.update(1)
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used

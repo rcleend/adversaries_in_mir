@@ -6,20 +6,33 @@ import torch.nn as nn
 from tqdm import tqdm
 from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
 from instrument_classifier.utils.paths import misc_path
+import pandas as pd
 
 
-def _add_pred_to_csv(data_name, sample_name, y, y_avg):
-    y_avg_class = torch.argmax(y_avg, dim=1)
-    y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1))
+def _add_pred_to_csv(all_pred_df, defence_name, data_name):
+    csv_path = f'defences/defence_{defence_name}.csv'
 
-    with open(os.path.join(misc_path, f'defences/defence_{data_name}.csv'), 'a', encoding='UTF8') as f:
-        writer = csv.writer(f)
+    if os.path.isfile(os.path.join(misc_path, csv_path)): # Check if CSV already exists
+        csv_df = pd.read_csv(csv_path) # Read CSV
+
+        # Append new columns to existing CSV dataframe
+        csv_df[f'{data_name} pred label'] = all_pred_df[f'{data_name} pred label']
+        csv_df[f'{data_name} pred prob'] = all_pred_df[f'{data_name} pred prob']
+
+    all_pred_df.to_csv(csv_path, index=False) # Save CSV
+
+    # y_avg_class = torch.argmax(y_avg, dim=1)
+    # y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1))
+
+    # with open(os.path.join(misc_path, f'defences/defence_{data_name}.csv'), 'a', encoding='UTF8') as f:
+    #     writer = csv.writer(f)
 
         # write the header
         # writer.writerow()
 
         # write the data
-        writer.writerow([sample_name, y.item(), y_avg_class.item(), y_avg_prob.item()])
+        # writer.writerow([sample_name, y.item(), y_avg_class.item(), y_avg_prob.item()])
+        # TODO: add columns if sample already exists (for PGDN and FGSM)
 
     # print(sample_name, y.item(), y_avg_class.item(), y_avg_prob.item())
 
@@ -27,24 +40,35 @@ def _add_pred_to_csv(data_name, sample_name, y, y_avg):
 
 
 
-def _eval_def_nets(def_nets, data_loader, data_name, device):
+def _eval_def_nets(def_nets, data_loader, data_name, defence_name, device):
     # Iterate through all the defence networks
+    all_pred_df = pd.DataFrame()
     dataset_size = len(data_loader.dataset)
     with tqdm(total=dataset_size, desc=f'Running defence on {data_name} samples', bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
         for i, (x, y, sample_name) in enumerate(data_loader):
             pbar.update(1)
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
 
-            # reset y values for each sample
-            y_pred_sum = 0 
+            y_pred_sum = 0 # reset pred y value for each sample
 
-            for j, net in enumerate(def_nets):
+            for net in def_nets:
                 y_pred_sum += net(x) # Update sum of predicted y's
             
             y_avg = y_pred_sum /len(def_nets) # Calculate average predicted y based on sum of predicted y's
-            _add_pred_to_csv(data_name, sample_name[0], y, y_avg)
+            # _add_pred_to_csv(data_name, sample_name[0], y, y_avg)
+
+            y_avg_class = torch.argmax(y_avg, dim=1) # Get the final predicted class based on the average predicion of all the networkds
+            y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1)) # Get the probability of the average predicted class
+
+            # Create dataframe containing new prediction
+            new_pred_df = pd.DataFrame(
+                data=[sample_name, y.item(), y_avg_class.item(), y_avg_prob.item()],
+                columns=['Sample Name', 'Label', f'{data_name} pred label', f'{data_name} pred prob']
+                ) 
+
+            all_pred_df = all_pred_df.append(new_pred_df) # Add new prediction to dataframe containing all previous predictions
     
-        # _avg_pred_dict(predictions)
+    _add_pred_to_csv(all_pred_df, defence_name)
 
 # Load Cuda device if available
 if torch.cuda.is_available():
@@ -70,13 +94,19 @@ orig_net = get_network(model_name='torch16s1f', epoch=-1).to(device) # epoch -1 
 # Create multiple networks for all the defence models
 n_defence_nets = 3 #TODO replace with automatic directory detection or parameter
 
+# Add defence name, TODO: replace with input argument
+defence_name = 'test'
+
 nets = []
 for i in range(n_defence_nets):
     model_name = f'defence_{i+1}'
     nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
 
+# TODO: Make new csv file
+
+
 # Iterate through all the defence networks and average their baseline probabilities
-_eval_def_nets(nets, orig_loader, 'original', device)
+_eval_def_nets(nets, orig_loader, 'Original', device)
 
 # Iterate through all the defence networks and average their FGSM probabilities
 _eval_def_nets(nets, fgsm_loader, 'FGSM', device)

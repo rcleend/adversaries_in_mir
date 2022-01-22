@@ -14,11 +14,11 @@ def _add_preds_to_csv(df, net_name):
     df.to_csv(csv_path, index=False) # Save CSV
 
 
-def _get_pred(nets, data_loader, net_name, data_name, device):
+def _get_pred(nets, data_loader, pred_name, device):
     all_pred_df = pd.DataFrame() # Create dataframe to store all the predictions
 
     dataset_size = len(data_loader.dataset) # Get dataset_size and use it as an input for the progress bar
-    with tqdm(total=dataset_size, desc=f'Computing {data_name} data predictions', bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
+    with tqdm(total=dataset_size, desc=f'Computing {pred_name}', bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
 
         # Iterate through all the samples
         for i, (x, y, sample_name) in enumerate(data_loader):
@@ -36,8 +36,8 @@ def _get_pred(nets, data_loader, net_name, data_name, device):
             y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1)) # Get the probability of the average predicted class
 
             # Create dataframe containing new prediction
-            new_pred_df = pd.DataFrame(data=[[sample_name, y.item(), y_avg_class.item(), y_avg_prob.item()]]) 
-            new_pred_df.columns =['Sample Name', 'Label', f'Pred {data_name} data on {net_name}', f'Prob pred {data_name} data on {net_name}']
+            new_pred_df = pd.DataFrame(data=[[sample_name[0], y.item(), y_avg_class.item(), y_avg_prob.item()]]) 
+            new_pred_df.columns =['Sample Name', 'Label', f'Pred {pred_name}', f'Prob pred {pred_name}']
 
             all_pred_df = all_pred_df.append(new_pred_df) # Add new prediction to dataframe containing all previous predictions
     
@@ -75,25 +75,25 @@ for i in range(n_defence_nets):
     model_name = f'defence_{i+1}'
     nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
 
-pred_orig = _get_pred(nets=[orig_net], data_loader=orig_loader, net_name='orig', data_name='orig', device=device)
-pred_fgsm = _get_pred(nets=[orig_net], data_loader=fgsm_loader, net_name='orig', data_name='FGSM', device=device)
-pred_pgdn = _get_pred(nets=[orig_net], data_loader=pgdn_loader, net_name='orig', data_name='PGDN', device=device)
+pred_orig_net = _get_pred(nets=[orig_net], data_loader=orig_loader, pred_name='orig net', device=device)
+# pred_fgsm_net = _get_pred(nets=[orig_net], data_loader=fgsm_loader, pred_name='FGSM net', device=device)
+# pred_pgdn_net = _get_pred(nets=[orig_net], data_loader=pgdn_loader, pred_name='PGDN net', device=device)
 
 # Iterate through all the defence networks and return the average prob of the orig data pred
-def_pred_orig = _get_pred(nets=nets, data_loader=orig_loader, net_name='def', data_name='orig', device=device)
+pred_orig_def = _get_pred(nets=nets, data_loader=orig_loader, pred_name='orig def', device=device)
 
 # Iterate through all the defence networks and return the average prob of the orig data pred
-def_pred_fgsm = _get_pred(nets=nets, data_loader=fgsm_loader, net_name='def', data_name='FGSM', device=device)
+# pred_fgsm_def = _get_pred(nets=nets, data_loader=fgsm_loader, pred_name='FGSM def', device=device)
 
 # Iterate through all the defence networks and return the average prob of the orig data pred
-def_pred_pgdn = _get_pred(nets=nets, data_loader=pgdn_loader, net_name='def', data_name='PGDN', device=device)
+# pred_pgdn_def = _get_pred(nets=nets, data_loader=pgdn_loader, pred_name='PGDN def', device=device)
 
 # Concat all the pred df together into a total pred df
-total_pred_df = pred_orig
-total_pred_df = pd.concat([total_pred_df, pred_fgsm.reindex(total_pred_df.index)], axis=1)
-total_pred_df = pd.concat([total_pred_df, pred_pgdn.reindex(total_pred_df.index)], axis=1)
-total_pred_df = pd.concat([total_pred_df, def_pred_orig.reindex(total_pred_df.index)], axis=1)
-total_pred_df = pd.concat([total_pred_df, def_pred_fgsm.reindex(total_pred_df.index)], axis=1)
-total_pred_df = pd.concat([total_pred_df, def_pred_pgdn.reindex(total_pred_df.index)], axis=1)
+total_pred_df = pred_orig_net
+# total_pred_df = pd.concat([total_pred_df, pred_fgsm_net.reindex(total_pred_df.index)], axis=1)
+# total_pred_df = pd.concat([total_pred_df, pred_pgdn_net.reindex(total_pred_df.index)], axis=1)
+total_pred_df = pd.concat([total_pred_df, pred_orig_def.reindex(total_pred_df.index)], axis=1)
+# total_pred_df = pd.concat([total_pred_df, pred_fgsm_def.reindex(total_pred_df.index)], axis=1)
+# total_pred_df = pd.concat([total_pred_df, pred_pgdn_def.reindex(total_pred_df.index)], axis=1)
 
 _add_preds_to_csv(total_pred_df)

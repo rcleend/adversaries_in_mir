@@ -8,7 +8,7 @@ def _add_pred_to_csv(sample_name, y, y_avg):
     y_avg_class = torch.argmax(y_avg, dim=1)
     y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1))
 
-    print(sample_name, y.item(), y_avg.item(), y_avg_class.item(), y_avg_prob.item())
+    print(sample_name, y, y_avg, y_avg_class, y_avg_prob)
 
 
 

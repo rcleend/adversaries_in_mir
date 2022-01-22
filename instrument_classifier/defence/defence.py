@@ -4,40 +4,31 @@ import torch
 import torch.nn as nn
 from instrument_classifier.evaluation.evaluation_utils import get_data, get_network
 
-def _avg_pred_dict(predictions): 
-    avg_pred = {}
-    for key, value in predictions.items():
-        y = value[0]
-        y_pred = value[1] / n_defence_nets
-        y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
-        y_pred_class = torch.argmax(y_pred, dim=1)
+def _add_pred_to_csv(sample_name, y, y_avg):
+    y_avg_class = torch.argmax(y_avg, dim=1)
+    y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1))
 
-        avg_pred[key] = [y, y_pred_class, y_pred_prob]
-    print(avg_pred)
+    print(sample_name, y.item(), y_avg.item(), y_avg_class.item(), y_avg_prob.item())
 
-def _update_pred_dict(predictions, key, y, y_pred):
-    if key in predictions:
-        predictions[key][1] += y_pred
-    else:
-        predictions[key] =  [y, y_pred]
-    return predictions
+
+
 
 
 def _eval_def_nets(def_nets, data_loader, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
-    predictions = {}
-    for i, net in enumerate(def_nets):
-        for j, (x, y, sample_name) in enumerate(data_loader):
-            x, y = x.to(device), y.to(device)  # Move the data to the device that is used
-            y_pred = net(x)
-            
-            # y_pred_prob = torch.max(nn.functional.softmax(y_pred, dim=1))
-            # y_pred_class = torch.argmax(y_pred, dim=1)
-            print(f'net: {i +1 }, sample {j + 1}/{dataset_size}')
+    for i, (x, y, sample_name) in enumerate(data_loader):
 
-            # TODO: creates out of memory issue, fix this
-            # predictions = _update_pred_dict(predictions, key=sample_name[0], y=y, y_pred=y_pred)
+        # reset y values for each sample
+        y = 0 
+        y_pred_sum = 0 
+
+        for j, net in enumerate(def_nets):
+            x, y = x.to(device), y.to(device)  # Move the data to the device that is used
+            y_pred_sum += net(x) # Update sum of predicted y's
+            
+        y_avg = y_pred_sum /len(def_nets) # Calculate average predicted y based on sum of predicted y's
+        _add_pred_to_csv(sample_name[0], y, y_avg)
     
     # _avg_pred_dict(predictions)
 

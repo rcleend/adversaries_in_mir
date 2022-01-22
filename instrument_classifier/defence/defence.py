@@ -18,13 +18,12 @@ def _eval_def_nets(def_nets, data_loader, device):
     # Iterate through all the defence networks
     dataset_size = len(data_loader.dataset)
     for i, (x, y, sample_name) in enumerate(data_loader):
+        x, y = x.to(device), y.to(device)  # Move the data to the device that is used
 
         # reset y values for each sample
-        y = 0 
         y_pred_sum = 0 
 
         for j, net in enumerate(def_nets):
-            x, y = x.to(device), y.to(device)  # Move the data to the device that is used
             y_pred_sum += net(x) # Update sum of predicted y's
             
         y_avg = y_pred_sum /len(def_nets) # Calculate average predicted y based on sum of predicted y's

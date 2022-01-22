@@ -41,16 +41,19 @@ def _add_pred_to_csv(all_pred_df, defence_name, data_name):
 
 
 def _eval_def_nets(def_nets, data_loader, data_name, defence_name, device):
-    # Iterate through all the defence networks
-    all_pred_df = pd.DataFrame()
-    dataset_size = len(data_loader.dataset)
+    all_pred_df = pd.DataFrame() # Create dataframe to store all the predictions
+
+    dataset_size = len(data_loader.dataset) # Get dataset_size and use it as an input for the progress bar
     with tqdm(total=dataset_size, desc=f'Running defence on {data_name} samples', bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
+
+        # Iterate through all the samples
         for i, (x, y, sample_name) in enumerate(data_loader):
-            pbar.update(1)
+            pbar.update(1) # Update progress bar
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
 
             y_pred_sum = 0 # reset pred y value for each sample
 
+            # Iterate through all the defence networks
             for net in def_nets:
                 y_pred_sum += net(x) # Update sum of predicted y's
             
@@ -106,13 +109,13 @@ for i in range(n_defence_nets):
 
 
 # Iterate through all the defence networks and average their baseline probabilities
-_eval_def_nets(nets, orig_loader, 'Original', device)
+_eval_def_nets(def_nets=nets, data_loader=orig_loader, data_name='Original', defence_name=defence_name, device=device)
 
 # Iterate through all the defence networks and average their FGSM probabilities
-_eval_def_nets(nets, fgsm_loader, 'FGSM', device)
+_eval_def_nets(def_nets=nets, data_loader=fgsm_loader, data_name='FGSM', defence_name=defence_name, device=device)
 
 # Iterate through all the defence networks and average their PGDN probabilities
-_eval_def_nets(nets, pgdn_loader, 'PGDN', device)
+_eval_def_nets(def_nets=nets, data_loader=pgdn_loader, data_name='PGDN', defence_name=defence_name, device=device)
 
 # Get the single label with the highest output probability
 

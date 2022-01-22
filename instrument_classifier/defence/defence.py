@@ -8,7 +8,7 @@ from instrument_classifier.evaluation.evaluation_utils import get_data, get_netw
 from instrument_classifier.utils.paths import misc_path
 
 
-def _add_pred_to_csv(sample_name, y, y_avg, data_name):
+def _add_pred_to_csv(data_name, sample_name, y, y_avg):
     y_avg_class = torch.argmax(y_avg, dim=1)
     y_avg_prob = torch.max(nn.functional.softmax(y_avg, dim=1))
 
@@ -42,7 +42,7 @@ def _eval_def_nets(def_nets, data_loader, data_name, device):
                 y_pred_sum += net(x) # Update sum of predicted y's
             
             y_avg = y_pred_sum /len(def_nets) # Calculate average predicted y based on sum of predicted y's
-            _add_pred_to_csv(sample_name[0], y, y_avg)
+            _add_pred_to_csv(data_name, sample_name[0], y, y_avg)
     
         # _avg_pred_dict(predictions)
 

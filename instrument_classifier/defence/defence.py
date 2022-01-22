@@ -92,7 +92,7 @@ pred_orig_def = _get_pred(nets=nets, data_loader=orig_loader, pred_name='orig de
 total_pred_df = pred_orig_net
 # total_pred_df = pd.concat([total_pred_df, pred_fgsm_net.reindex(total_pred_df.index)], axis=1)
 # total_pred_df = pd.concat([total_pred_df, pred_pgdn_net.reindex(total_pred_df.index)], axis=1)
-total_pred_df = pd.concat([total_pred_df, pred_orig_def.reindex(total_pred_df.index)], axis=1)
+total_pred_df = total_pred_df.merge(pred_orig_def, how='inner', on='Sample Name')
 # total_pred_df = pd.concat([total_pred_df, pred_fgsm_def.reindex(total_pred_df.index)], axis=1)
 # total_pred_df = pd.concat([total_pred_df, pred_pgdn_def.reindex(total_pred_df.index)], axis=1)
 

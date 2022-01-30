@@ -136,7 +136,7 @@ def _prep_files(validation_set: bool):
     print("Before: ", tot_files[:split_idx])
     print("\nAfter: ", np.random.choice(tot_files[:split_idx], 338, replace=True))
     # If training with 63% (~338) of samples: uncomment first line. If with all samples: uncomment second line
-    return np.random.choice(tot_files[:split_idx], 338, replace=True), tot_files[split_idx:]
+    return np.random.choice(tot_files[:split_idx], 338, replace=True).tolist(), tot_files[split_idx:]
     # return tot_files[:split_idx], tot_files[split_idx:]
 
 

@@ -67,7 +67,8 @@ class AudioDataset(Dataset):
             self.labels = get_train_label_dict()
 
         self.label_map = {l: i for i, l in enumerate(sorted(get_unique_label_set()))}
-        self.filenames = sorted(list(self.filenames.intersection(set(self.labels.keys()))))
+        self.filenames = sorted(list(list(self.filenames).intersection(set(self.labels.keys()))))
+        print(self.filenames)
 
     def __len__(self):
         return len(self.filenames)

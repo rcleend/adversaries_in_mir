@@ -153,7 +153,7 @@ def main():
     print("Train files: ", train_files)
     train_loader, valid_loader, logger = _preps(params, train_files, valid_files, logging_path)
     print("Train loader dataset: ", train_loader)
-    print("Train loader dataset size: ", len(train_loader[0]))
+    print("Train loader dataset size: ", len(train_loader.dataset[0]))
 
     # run training
     run_training(train_loader, valid_loader, logger, params, save_path)

@@ -133,7 +133,9 @@ def _prep_files(validation_set: bool):
     rng = np.random.RandomState(21)
     rng.shuffle(tot_files)
     split_idx = int(len(tot_files) * 0.75)
-    return tot_files[:split_idx], tot_files[split_idx:]
+    # If training with 63% (~338) of samples: uncomment first line. If with all samples: uncomment second line
+    return np.random.choice(tot_files[:split_idx], 338, replace=True), tot_files[split_idx:]
+    # return tot_files[:split_idx], tot_files[split_idx:]
 
 
 def main():

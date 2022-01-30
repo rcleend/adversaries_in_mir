@@ -138,7 +138,7 @@ def _prep_files(validation_set: bool):
     print("type after 63%: ", type(np.random.choice(tot_files[:split_idx], 338, replace=True).tolist()))
     print("list after 63%: ", np.random.choice(tot_files[:split_idx], 338, replace=True).tolist())
     # If training with 63% (~338) of samples: uncomment first line. If with all samples: uncomment second line
-    return np.random.choice(tot_files[:split_idx], 338, replace=True).tolist(), tot_files[split_idx:]
+    return tot_files[:split_idx], tot_files[split_idx:]
     # return tot_files[:split_idx], tot_files[split_idx:]
 
 

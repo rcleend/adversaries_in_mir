@@ -1,5 +1,5 @@
 #WHEN CHANGING THIS TO TEST, ALSO CHANGE THE PATH OF THE FILES IN utils/paths
-experiment = first_manual_training
+experiment = defence_x
 log_file = log.csv
 validation_set = True
 

@@ -152,7 +152,8 @@ def main():
     train_files, valid_files = _prep_files(params.validation_set)
     print("Train files: ", train_files)
     train_loader, valid_loader, logger = _preps(params, train_files, valid_files, logging_path)
-    print("Train loader dataset: ", train_loader.dataset)
+    print("Train loader dataset: ", train_loader)
+    print("Train loader dataset size: ", len(train_loader[0]))
 
     # run training
     run_training(train_loader, valid_loader, logger, params, save_path)

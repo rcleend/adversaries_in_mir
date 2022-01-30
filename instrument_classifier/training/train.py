@@ -133,7 +133,13 @@ def _prep_files(validation_set: bool):
     rng = np.random.RandomState(21)
     rng.shuffle(tot_files)
     split_idx = int(len(tot_files) * 0.75)
+    print("type before 63%: ", type(tot_files[:split_idx]))
+    print("list before 63%: ", tot_files[:split_idx])
+    print("type after 63%: ", type(np.random.choice(tot_files[:split_idx], 338, replace=True).tolist()))
+    print("list after 63%: ", np.random.choice(tot_files[:split_idx], 338, replace=True).tolist())
+    # If training with 63% (~338) of samples: uncomment first line. If with all samples: uncomment second line
     return tot_files[:split_idx], tot_files[split_idx:]
+    # return tot_files[:split_idx], tot_files[split_idx:]
 
 
 def main():
@@ -148,7 +154,10 @@ def main():
 
     # prep data loaders, logger
     train_files, valid_files = _prep_files(params.validation_set)
+    print("Train files: ", train_files)
     train_loader, valid_loader, logger = _preps(params, train_files, valid_files, logging_path)
+    print("Train loader dataset: ", train_loader)
+    print("Train loader dataset size: ", train_loader.dataset[0])
 
     # run training
     run_training(train_loader, valid_loader, logger, params, save_path)

@@ -132,8 +132,12 @@ def _prep_files(validation_set: bool):
         return tot_files, []
     rng = np.random.RandomState(21)
     rng.shuffle(tot_files)
+    print("Total amount of files: ", len(tot_files))
+
     split_idx = int(len(tot_files) * 0.75)
-    return np.random.choice(tot_files[:split_idx], 338, replace=True).tolist(), tot_files[split_idx:]
+    print("Amount of validation files: ", len(tot_files[split_idx:]))
+    print("Amount of training files for ensemble (63%): ", int(len(tot_files[:split_idx]) * 0.632))
+    return np.random.choice(tot_files[:split_idx], int(len(tot_files[:split_idx]) * 0.632), replace=True).tolist(), tot_files[split_idx:]
 
 
 def main():

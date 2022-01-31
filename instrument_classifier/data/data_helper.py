@@ -11,8 +11,8 @@ def compute_std_mean(files, sample_path):
     """ Returns mean and standard deviation of features for given files. """
     fun = get_torch_spec
 
-    x = np.zeros((1, 100))
-    x2 = np.zeros((1, 100))
+    x = np.zeros((1, 50))
+    x2 = np.zeros((1, 50))
     n = 0
 
     for file in files:

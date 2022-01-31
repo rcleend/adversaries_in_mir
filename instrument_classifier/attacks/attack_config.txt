@@ -1,5 +1,5 @@
 experiment = cw_test
-model_to_attack = torch16s1f
+model_to_attack = first_manual_training
 valid = False
 target = random
 attack = cw

@@ -12,40 +12,47 @@ import pandas as pd
 
 def _add_preds_to_csv(df, csv_name):
     csv_path = os.path.join(misc_path, f'defences/{csv_name}.csv')
-    df.to_csv(csv_path, index=False) # Save CSV
+    df.to_csv(csv_path, index=False)  # Save CSV
     print(f'Successfully saved csv: {csv_path}')
 
 
 def _get_pred(nets, data_loader, pred_name, device):
-    all_pred_df = pd.DataFrame() # Create dataframe to store all the predictions
+    all_pred_df = pd.DataFrame()  # Create dataframe to store all the predictions
 
-    dataset_size = len(data_loader.dataset) # Get dataset_size and use it as an input for the progress bar
-    with tqdm(total=dataset_size, desc=f'Computing predictions {pred_name}', bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
+    dataset_size = len(data_loader.dataset)  # Get dataset_size and use it as an input for the progress bar
+    with tqdm(total=dataset_size, desc=f'Computing predictions {pred_name}',
+              bar_format="{l_bar}{bar} [ time left: {remaining} ]") as pbar:
 
         # Iterate through all the samples
         for i, (x, y, sample_name) in enumerate(data_loader):
-            pbar.update(1) # Update progress bar
+            pbar.update(1)  # Update progress bar
             x, y = x.to(device), y.to(device)  # Move the data to the device that is used
 
-            y_pred_sum = 0 # reset pred y value for each sample
+            y_pred_sum = 0  # reset pred y value for each sample
 
             # Iterate through all the defence networks
             for net in nets:
-                y_pred_sum += net(x) # Update sum of predicted y's
-            
-            y_avg = y_pred_sum /len(nets) # Calculate average predicted y based on sum of predicted y's
-            y_avg_pred = torch.argmax(y_avg, dim=1) # Get the predicted class based on the average predicion of all the networkds
-            y_avg_softmax = nn.functional.softmax(y_avg, dim=1) # Get the probabilities of the average predicted class using softmax
-            y_avg_prob = torch.max(y_avg_softmax) # Get the highest probability of the average predicted class
-            y_act_prob = y_avg_softmax[0][y.item()] # Get the predicted probability of the actual class
+                y_pred_sum += net(x)  # Update sum of predicted y's
+
+            y_avg = y_pred_sum / len(nets)  # Calculate average predicted y based on sum of predicted y's
+            y_avg_pred = torch.argmax(y_avg,
+                                      dim=1)  # Get the predicted class based on the average predicion of all the networkds
+            y_avg_softmax = nn.functional.softmax(y_avg,
+                                                  dim=1)  # Get the probabilities of the average predicted class using softmax
+            y_avg_prob = torch.max(y_avg_softmax)  # Get the highest probability of the average predicted class
+            y_act_prob = y_avg_softmax[0][y.item()]  # Get the predicted probability of the actual class
 
             # Create dataframe containing new prediction
-            new_pred_df = pd.DataFrame(data=[[sample_name[0], y.item(), y_avg_pred.item(), y_act_prob.item(), y_avg_prob.item()]]) 
-            new_pred_df.columns =['Sample Name', 'Label', f'Pred {pred_name}', f'Prob act {pred_name}', f'Prob pred {pred_name}']
+            new_pred_df = pd.DataFrame(
+                data=[[sample_name[0], y.item(), y_avg_pred.item(), y_act_prob.item(), y_avg_prob.item()]])
+            new_pred_df.columns = ['Sample Name', 'Label', f'Pred {pred_name}', f'Prob act {pred_name}',
+                                   f'Prob pred {pred_name}']
 
-            all_pred_df = all_pred_df.append(new_pred_df) # Add new prediction to dataframe containing all previous predictions
-    
+            all_pred_df = all_pred_df.append(
+                new_pred_df)  # Add new prediction to dataframe containing all previous predictions
+
     return all_pred_df
+
 
 # START DEFENCE ===========================================================
 
@@ -55,34 +62,35 @@ parser.add_argument('--n_def_nets', default=3, type=int, help='Amount of defence
 parser.add_argument('--csv_name', default='defences', type=str, help='Ouput csv name it will be saved as')
 args = parser.parse_args()
 
-n_defence_nets = args.n_def_nets 
+n_defence_nets = args.n_def_nets
 csv_name = args.csv_name
 
 # Load Cuda device if available
 if torch.cuda.is_available():
-  device = torch.device('cuda')
+    device = torch.device('cuda')
 else:
-  device = torch.device('cpu')
+    device = torch.device('cpu')
 
 print('device: ', device)
 
 # Create a dataloader for the FGSM attack samples
-fgsm_loader = get_data(model_name='torch16s1f',adversary='fgsm_test',valid_set=True)
+fgsm_loader = get_data(model_name='torch16s1f', adversary='fgsm_test', valid_set=True)
 
 # Create a dataloader for the PGDN attack samples
-pgdn_loader = get_data(model_name='torch16s1f',adversary='pgdn_test',valid_set=True)
+pgdn_loader = get_data(model_name='torch16s1f', adversary='pgdn_test', valid_set=True)
 
 # Create a dataloader for the original samples
-orig_loader = get_data(model_name='torch16s1f',adversary=None,valid_set=True)
+orig_loader = get_data(model_name='torch16s1f', adversary=None, valid_set=True)
 
 # Create original network to get baseline prediction
-orig_net = get_network(model_name='first_manual_training', epoch=-1).to(device) # epoch -1 loads the latest epoch available
+orig_net = get_network(model_name='first_manual_training', epoch=-1).to(
+    device)  # epoch -1 loads the latest epoch available
 
 # Create defence networks
 nets = []
 for i in range(n_defence_nets):
-    model_name = f'defence_{i+1}'
-    nets.append(get_network(model_name=model_name, epoch=-1).to(device)) # add defence network to nets array
+    model_name = f'defence_{i + 1}'
+    nets.append(get_network(model_name=model_name, epoch=-1).to(device))  # add defence network to nets array
 
 # Get predictions of all the data using the original network
 pred_orig_net = _get_pred(nets=[orig_net], data_loader=orig_loader, pred_name='orig net / orig data', device=device)

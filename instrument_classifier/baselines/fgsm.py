@@ -12,12 +12,9 @@ from instrument_classifier.utils.attack_utils import get_feature_fun, get_net, g
 def _fgsm(net, epsilon, x, y, get_feature):
     delta = torch.zeros_like(x).to(x.device)
     delta.requires_grad = True
+    print("len x:",len(x))
 
     logits = net(get_feature(x + delta))  # same as if we'd directly work on x
-
-    print("len logits: ",len(logits))
-    print("len x:",x)
-
     optimizer = optim.SGD([delta], lr=epsilon)  # lr corresponds to epsilon in original paper
 
     optimizer.zero_grad()

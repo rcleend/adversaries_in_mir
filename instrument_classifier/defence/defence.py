@@ -76,7 +76,7 @@ pgdn_loader = get_data(model_name='torch16s1f',adversary='pgdn_test',valid_set=T
 orig_loader = get_data(model_name='torch16s1f',adversary=None,valid_set=True)
 
 # Create original network to get baseline prediction
-orig_net = get_network(model_name='torch16s1f', epoch=-1).to(device) # epoch -1 loads the latest epoch available
+orig_net = get_network(model_name='first_manual_training', epoch=-1).to(device) # epoch -1 loads the latest epoch available
 
 # Create defence networks
 nets = []

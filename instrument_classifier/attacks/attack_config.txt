@@ -1,6 +1,6 @@
 experiment = cw_test
 model_to_attack = torch16s1f
-valid = True
+valid = False
 target = random
 attack = cw
 rand_seed = 21

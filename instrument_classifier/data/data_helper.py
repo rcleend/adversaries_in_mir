@@ -59,6 +59,5 @@ def get_feature_norm_pad(feature_fun, file, path, norm_file_path, sample_wise_no
 def make_get_feature(feature_fun, norm_file_path):
     """ Returns wrapper function for feature computation. """
     def get_features(file):
-        print("file: ", file)
         return get_feature_norm_pad(feature_fun, file.view(1, -1), None, norm_file_path, False)
     return get_features

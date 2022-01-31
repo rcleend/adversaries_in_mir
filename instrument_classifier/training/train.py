@@ -133,7 +133,7 @@ def _prep_files(validation_set: bool):
     rng = np.random.RandomState(21)
     rng.shuffle(tot_files)
     split_idx = int(len(tot_files) * 0.75)
-    return tot_files[:split_idx], tot_files[split_idx:]
+    return np.random.choice(tot_files[:split_idx], int(len(tot_files[:split_idx]) * 0.632), replace=True).tolist(), tot_files[split_idx:]
 
 
 def main():

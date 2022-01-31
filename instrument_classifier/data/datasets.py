@@ -20,7 +20,8 @@ class RawDataset(Dataset):
         if not set(self.filenames).issubset(set(self.labels.keys())):
             self.labels.update(get_test_label_dict())
         self.label_map = {l: i for i, l in enumerate(sorted(get_unique_label_set()))}
-        self.filenames = sorted(list(set(self.filenames).intersection(set(self.labels.keys()))))
+        # Re-enable line below to remove duplicates/wrong filenames
+        # self.filenames = sorted(list(set(self.filenames).intersection(set(self.labels.keys()))))
 
     def __len__(self):
         return len(self.filenames)
@@ -67,7 +68,8 @@ class AudioDataset(Dataset):
             self.labels = get_train_label_dict()
 
         self.label_map = {l: i for i, l in enumerate(sorted(get_unique_label_set()))}
-        self.filenames = sorted(list(set(self.filenames).intersection(set(self.labels.keys()))))
+        # Re-enable line below to remove duplicates/wrong filenames
+        # self.filenames = sorted(list(set(self.filenames).intersection(set(self.labels.keys()))))
 
     def __len__(self):
         return len(self.filenames)
@@ -108,4 +110,4 @@ class AudioDataset(Dataset):
 
         [tag] = self.labels.get(clip)
         label = torch.tensor(self.label_map[tag]).long()
-        return data, label, clip
+        return data, label#, clip

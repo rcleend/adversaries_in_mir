@@ -1,10 +1,10 @@
 #WHEN CHANGING THIS TO TEST, ALSO CHANGE THE PATH OF THE FILES IN utils/paths
-experiment = first_manual_training
+experiment = defence_x2
 log_file = log.csv
 validation_set = True
 
 # model related
-epochs = 10
+epochs = 50
 batch_size = 16
 save_interval = 5
 

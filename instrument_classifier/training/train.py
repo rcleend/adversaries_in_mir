@@ -24,8 +24,7 @@ def do_train_epoch(net, train_loader, criterion, optimiser, device):
     """ Performs one training epoch. """
     net.train()
     t_loss, t_acc = 0., 0.
-    print("object 0",train_loader.dataset[0])
-    print("train_loader object: ",train_loader)
+
     for x, y in train_loader:
         x, y = x.to(device), y.to(device)
         logits = net(x)
@@ -134,7 +133,7 @@ def _prep_files(validation_set: bool):
     rng = np.random.RandomState(21)
     rng.shuffle(tot_files)
     split_idx = int(len(tot_files) * 0.75)
-    return tot_files[:split_idx], tot_files[split_idx:]
+    return np.random.choice(tot_files[:split_idx], int(len(tot_files[:split_idx]) * 0.632), replace=True).tolist(), tot_files[split_idx:]
 
 
 def main():

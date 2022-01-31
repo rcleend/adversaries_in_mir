@@ -40,7 +40,11 @@ def get_raw_test_loader(files, d_path):
 def get_feature_norm_pad(feature_fun, file, path, norm_file_path, sample_wise_norm):
     """ Given a feature function, computes normalised and padded feature. """
     # compute feature
+    print("feature path:",path)
     feature = feature_fun(file, sample_path=path)
+    print("len feature 2:",len(feature))
+    print("len feature 2 squeeze:",len(feature.squeeze()))
+
     # normalise if required
     if sample_wise_norm:
         mean = torch.mean(feature.squeeze(), dim=-1)

@@ -51,6 +51,7 @@ def normalise(feature, norm_file_path):
     print("len std:",len(std))
     print("len mean:",len(mean))
     print("len feature:", len(feature.squeeze()))
+    print("feature:", feature)
 
     if isinstance(feature, np.ndarray):
         feature = ((feature.transpose() - mean) / std).transpose()

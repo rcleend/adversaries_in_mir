@@ -24,6 +24,7 @@ def do_train_epoch(net, train_loader, criterion, optimiser, device):
     """ Performs one training epoch. """
     net.train()
     t_loss, t_acc = 0., 0.
+    print("object 0",train_loader[0])
     print("train_loader object: ",train_loader)
     for x, y in train_loader:
         x, y = x.to(device), y.to(device)

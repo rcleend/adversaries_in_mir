@@ -38,7 +38,7 @@ def read_label_dict(file_path):
 def read_feature(file, sample_path):
     """ Reads pre-computed feature from a .npy file. """
     spec = np.load(os.path.join(sample_path, file.replace('.wav', '.npy')))
-    return torch.tensor(spec).view(1, 100, -1)
+    return torch.tensor(spec).view(1, 50, -1)
 
 
 def circular_pad(x, padding_length):

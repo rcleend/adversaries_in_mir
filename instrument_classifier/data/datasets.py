@@ -87,7 +87,7 @@ class AudioDataset(Dataset):
         windows = divide_in_frames(data, self.feature_dict.feature_length)
         [win_idx] = np.random.choice(windows.shape[0], 1)
         data = windows[win_idx]
-        return data.view(1, 100, -1)
+        return data.view(1, 50, -1)
 
     def _normalise(self, data):
         if self.norm_file_path is None and not self.feature_dict.sample_wise_norm:
@@ -96,10 +96,10 @@ class AudioDataset(Dataset):
             e = 1e-5
             mean = torch.mean(data.squeeze(), dim=-1)
             std = torch.std(data.squeeze(), dim=-1)
-            return torch.transpose(((torch.transpose(data.squeeze(), 0, 1) - mean) / (std + e)), 0, 1).view(1, 100, -1)
+            return torch.transpose(((torch.transpose(data.squeeze(), 0, 1) - mean) / (std + e)), 0, 1).view(1, 50, -1)
         else:
             # normalise with pre-computed mean/std
-            return normalise(data, self.norm_file_path).view(1, 100, -1)
+            return normalise(data, self.norm_file_path).view(1, 50, -1)
 
     def __getitem__(self, index):
         clip = self.filenames[index]

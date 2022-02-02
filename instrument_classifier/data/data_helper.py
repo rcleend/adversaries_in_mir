@@ -11,8 +11,8 @@ def compute_std_mean(files, sample_path):
     """ Returns mean and standard deviation of features for given files. """
     fun = get_torch_spec
 
-    x = np.zeros((1, 100))
-    x2 = np.zeros((1, 100))
+    x = np.zeros((1, 50))
+    x2 = np.zeros((1, 50))
     n = 0
 
     for file in files:
@@ -40,24 +40,29 @@ def get_raw_test_loader(files, d_path):
 def get_feature_norm_pad(feature_fun, file, path, norm_file_path, sample_wise_norm):
     """ Given a feature function, computes normalised and padded feature. """
     # compute feature
+    print("feature path:",path)
     feature = feature_fun(file, sample_path=path)
+    print("len feature 2:",len(feature))
+    print("len feature 2 squeeze:",len(feature.squeeze()))
+
     # normalise if required
     if sample_wise_norm:
         mean = torch.mean(feature.squeeze(), dim=-1)
         std = torch.std(feature.squeeze(), dim=-1)
         feature = torch.transpose(((torch.transpose(feature.squeeze(), 0, 1) - mean) /
-                                   (std + 1e-5)), 0, 1).view(1, 100, -1)
+                                   (std + 1e-5)), 0, 1).view(1, 50, -1)
     elif norm_file_path is not None:
-        feature = normalise(feature, norm_file_path=norm_file_path).view(1, 100, -1)
+        feature = normalise(feature, norm_file_path=norm_file_path).view(1, 50, -1)
     # pad if shorter than 35
     pad_len = 35 - feature.shape[-1]
     if pad_len > 0:
-        return circular_pad(feature, pad_len).view(1, 1, 100, -1)
-    return feature.view(1, 1, 100, -1)
+        return circular_pad(feature, pad_len).view(1, 1, 50, -1)
+    return feature.view(1, 1, 50, -1)
 
 
 def make_get_feature(feature_fun, norm_file_path):
     """ Returns wrapper function for feature computation. """
     def get_features(file):
+        return get_feature_norm_pad(feature_fun, file.view(1, -1), None, norm_file_path, False)
         return get_feature_norm_pad(feature_fun, file.view(1, -1), None, norm_file_path, False)
     return get_features

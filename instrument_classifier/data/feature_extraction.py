@@ -48,6 +48,10 @@ def normalise(feature, norm_file_path):
     """ Normalises a given feature (e.g. spectrogram, mfcc) with statistics given at norm_file_path. """
     std = np.loadtxt(norm_file_path.format('std'), delimiter=',')
     mean = np.loadtxt(norm_file_path.format('mean'), delimiter=',')
+    print("len std:",len(std))
+    print("len mean:",len(mean))
+    print("len feature:", len(feature.squeeze()))
+    print("feature:", feature)
 
     if isinstance(feature, np.ndarray):
         feature = ((feature.transpose() - mean) / std).transpose()

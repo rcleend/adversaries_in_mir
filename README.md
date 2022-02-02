@@ -60,7 +60,14 @@ Zenodo. http://doi.org/10.5281/zenodo.3612637.
 Xavier Serra. "Audio tagging with noisy labels and minimal supervision". 
 Proceedings of the DCASE 2019 Workshop, NYC, US (2019).
 
-#### Experiments
+#### Training a network
+To train a network, first define the parameters in `instrument_classifier/training/params.txt`. Afterwards you can start training the network by running the following file:
+
+````
+python -m instrument_classifier.training.train 
+````
+
+#### Attacking the network
 
 The folder `misc/pretrained_models` contains two pre-trained models we use for our experiments 
 (use model `torch16s1f_2` for extended experiments, cf. section A.5.2 in the supplementary material). 
@@ -92,6 +99,13 @@ switch between the two attacks by setting `attack = cw` or `attack = mscw`
 respectively; in addition to that, the target class can be modified to
 be either `target = random` or the name of a particular classs, e.g.
 `target = accordion`.
+
+#### Defence
+To test the FGSM and PFD attack on the defence networks run the following code:
+
+````
+python -m instrument_classifier.defence.defence --n_def_nets=10 --csv_name=final_defence_valid_false
+````
 
 #### Evaluation
 
